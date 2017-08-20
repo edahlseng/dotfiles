@@ -1,0 +1,36 @@
+cask_args appdir: '/Applications'
+
+tap "caskroom/cask"
+tap "homebrew/bundle"
+tap "homebrew/core"
+
+brew "clang-format"
+brew "fwup"
+brew "iperf"
+brew "mas"
+brew "mongodb"
+brew "node"
+brew "python3"
+brew "wget"
+brew "youtube-dl"
+
+cask "arduino"
+cask "atom"
+cask "dropbox"
+cask "google-chrome"
+cask "handbrake"
+cask "mactex"
+cask "spectacle"
+
+mas "Affinity Designer", id: 824171161
+mas "Affinity Photo", id: 824183456
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Paprika Recipe Manager", id: 451907568
+mas "Pocket", id: 568494494
+mas "Slack", id: 803453959
+mas "WeChat", id: 836500024
+mas "Xcode", id: 497799835

@@ -1,4 +1,12 @@
+:set number
 syntax on
 
-" Wrap gitcommit file types at the appropriate length
-filetype indent plugin on
+" Remap movement keys for dvorak
+" h = left, t = down, n = up, s = right
+noremap h h
+noremap t j
+noremap n k
+noremap s l
+" Since we remapped the movement keys we now need to map l/L to n/N (look/lookback to next/previous)
+noremap l n
+noremap L N
