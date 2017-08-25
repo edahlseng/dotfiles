@@ -22,3 +22,8 @@ defaults write com.apple.Safari IncludeDevelopMenu -bool true
 defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
 defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+# Set up Terminal
+defaults write com.apple.Terminal "Default Window Settings" "Man Page"
+defaults write com.apple.Terminal "Startup Window Settings" "Man Page"
+echo "Terminal must be restarted for setting changes to be applied"
