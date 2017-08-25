@@ -1,19 +1,29 @@
-# From http://dotfiles.org/~_why/.zshrc
-# Sets the window title nicely no matter where you are
-function title() {
-  # escape '%' chars in $1, make nonprintables visible
-  a=${(V)1//\%/\%\%}
+# Xterm control sequences, https://www.x.org/docs/xterm/ctlseqs.pdf
+xtermChangeWindowTitle="\e]2;"
+xtermBell="\a"
 
-  # Truncate command, and join lines.
-  a=$(print -Pn "%40>...>$a" | tr -d "\n")
+truncatedWorkingDirectory="%55<...<%~"
 
-  case $TERM in
-  screen)
-    print -Pn "\ek$a:$3\e\\" # screen title (in ^A")
-    ;;
-  xterm*|rxvt)
-    print -Pn "\e]2;$2\a" # plain xterm title ($3 for pwd)
-    ;;
-  esac
-}
+# TODO: understand what these are doing ========================================
+# escape '%' chars in $1, make nonprintables visible
+a=${(V)1//\%/\%\%}
 
+# Truncate command, and join lines.
+a=$(print -Pn "%40>...>$a" | tr -d "\n")
+# ==============================================================================
+
+
+# Set the window title nicely no matter where you are
+case $TERM in
+    screen)
+        setTitle() {
+            # TODO: understand what this is doing
+            print -Pn "\ek$a:$3\e\\" # screen title (in ^A")
+        }
+        ;;
+    xterm*|rxvt)
+        setTitle() {
+            print -Pn "$xtermChangeWindowTitle$truncatedWorkingDirectory$xtermBell"
+        }
+        ;;
+esac

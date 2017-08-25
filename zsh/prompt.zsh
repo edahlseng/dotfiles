@@ -51,11 +51,11 @@ directoryName() {
 }
 
 export PROMPT=$'\n$fg_bold[black]%m:%{$reset_color%} $(directoryName) $(gitDirty)$(needPush)\n› '
-set_prompt () {
+setPrompt () {
 	export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
 }
 
 precmd() {
-	title "zsh" "%m" "%55<...<%~"
-	set_prompt
+	setTitle
+	setPrompt
 }
