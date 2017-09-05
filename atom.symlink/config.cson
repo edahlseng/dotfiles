@@ -1,4 +1,6 @@
 "*":
+  "autocomplete-python":
+    useKite: false
   core:
     hideGitIgnoredFiles: false
     telemetryConsent: "limited"
@@ -22,7 +24,6 @@
     fixOnSave: true
   "linter-ui-default":
     panelHeight: 69
-    showPanel: true
   metrics:
     userId: "352f3ca5a6c75d15bba3a83230f85e64aca3a111"
   "one-dark-ui": {}

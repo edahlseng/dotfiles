@@ -1,14 +1,10 @@
-atom.symlink/.apm
-atom.symlink/.node-gyp
-atom.symlink/.storage
-atom.symlink/blob-store
-atom.symlink/compile-cache/
-atom.symlink/packages
-atom.symlink/storage
-atom.symlink/themes
-atom.symlink/blob-store
-atom.symlink/recovery
-atom.symlink/github.cson
+atom.symlink/*
+!atom.symlink/config.cson
+!atom.symlink/init.coffee
+!atom.symlink/config.cson
+!atom.symlink/keymap.cson
+!atom.symlink/packages.txt
+!atom.symlink/styles.less
 
 git/gitconfig.local.symlink
 
