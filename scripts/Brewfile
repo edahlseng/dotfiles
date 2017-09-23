@@ -16,9 +16,11 @@ brew "youtube-dl"
 
 cask "arduino"
 cask "atom"
+cask "dash"
 cask "dropbox"
 cask "google-chrome"
 cask "handbrake"
+cask "lingo"
 cask "mactex"
 cask "spectacle"
 
