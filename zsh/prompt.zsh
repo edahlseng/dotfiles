@@ -8,13 +8,9 @@ else
 	git="/usr/bin/git"
 fi
 
-git_branch() {
-	echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
-}
-
 git_prompt_info() {
-	ref=$($git symbolic-ref HEAD 2>/dev/null) || return
-	# echo "(%{\e[0;33m%}${ref#refs/heads/}%{\e[0m%})"
+	ref=$($git symbolic-ref HEAD 2>/dev/null) || ref=$($git describe --tags --exact-match 2>/dev/null) || return
+
 	echo "${ref#refs/heads/}"
 }
 
@@ -36,7 +32,7 @@ gitDirty() {
 # `$git cherry -v @{upstream}` instead.
 needPush() {
 	if [ $($git rev-parse --is-inside-work-tree 2>/dev/null) ]; then
-		number=$($git cherry -v origin/$(git symbolic-ref --short HEAD) 2>/dev/null | wc -l | bc)
+		number=$($git cherry -v origin/$(git symbolic-ref --short HEAD 2>/dev/null) 2>/dev/null | wc -l | bc)
 
 		if [[ $number == 0 ]]; then
 			echo " "
