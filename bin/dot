@@ -69,6 +69,7 @@ done
 export ZSH=$HOME/.dotfiles
 
 if [ "$defaults" == "true" ]; then
+	echo ""
 	echo "Setting defaults..."
 
 	# Set macOS defaults
@@ -85,7 +86,6 @@ if [ "$defaults" == "true" ]; then
 	fi
 
 	echo "Defaults set!"
-	echo ""
 fi
 
 # ------------------------------------------------------------------------------
@@ -93,6 +93,7 @@ fi
 # ------------------------------------------------------------------------------
 
 if [ "$link" == "true" ]; then
+	echo ""
 	echo "Linking dotfiles..."
 	"$dotfilesDirectory/scripts/link.sh"
 fi
@@ -102,6 +103,7 @@ fi
 # ------------------------------------------------------------------------------
 
 if [ "$install" == "true" ]; then
+	echo ""
 	echo "Installing dependencies..."
 	"$dotfilesDirectory/scripts/install.sh"
 fi

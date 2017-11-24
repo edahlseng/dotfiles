@@ -11,6 +11,8 @@ brew "mas"
 brew "mongodb"
 brew "node"
 brew "python3"
+brew "rlwrap"
+brew "sbcl"
 brew "wget"
 brew "youtube-dl"
 
