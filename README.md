@@ -12,15 +12,14 @@ Run this:
 ```sh
 git clone https://github.com/edahlseng/dotfiles.git
 cd dotfiles
-./scripts/bootstrap
-dot
+./bin/dot
 ```
 
-Everything is configured and tweaked within this repository. `scripts/bootstrap` will symlink the appropriate files to your home directory, then `dot` installs some dependencies, sets defaults, and so on.
+Everything is configured and tweaked within this repository. `bin/dot` will set defaults, symlink the appropriate files to your home directory, and install dependencies.
 
-When new symlink files are added, re-run `scripts/bootstrap` to properly symlink them. Run `dot` from time to time to keep your environment fresh and up-to-date.
+Whenever changing something within this repository, re-run `dot` to apply the changes. Run `dot` from time to time to keep your environment fresh and up-to-date.
 
-The main file you'll want to change right off the bat is `zsh/zshrc.symlink`. `dot` is probably next to be tweaked, and is found in `bin/`.
+The main file you'll want to change right off the bat is `zsh/zshrc.symlink`. `install.sh` is probably next to be tweaked, and is found in `scripts/`.
 
 Components
 -------------------------------------------------------------------------------

@@ -1,29 +1,13 @@
 #!/usr/bin/env bash
 #
-# bootstrap installs things.
+# link links dotfiles to their proper place.
 
 set -e
 
 parentDirectory=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 dotfilesRoot=$(cd "$(dirname "$parentDirectory")" && pwd -P)
 
-info() {
-	printf "\r  [ \033[00;34m..\033[0m ] $1\n"
-}
-
-user() {
-	printf "\r  [ \033[0;33m??\033[0m ] $1\n"
-}
-
-success() {
-	printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
-}
-
-fail() {
-	printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-	echo ''
-	exit
-}
+source "$parentDirectory/logging.sh"
 
 setupGitConfig() {
 	if ! [ -f git/gitconfig.local.symlink ]; then
@@ -135,44 +119,11 @@ installDotfilesDirectory() {
 # ------------------------------------------------------------------------------
 
 cd "$dotfilesRoot"
-echo ''
+echo ""
 
 setupGitConfig
 installDotfiles
 installDotfilesDirectory
 
-# Install homebrew if it doesn't already exist
-if test ! $(which brew); then
-	echo "  Installing Homebrew for you."
-
-	# Install the correct homebrew for each OS type
-	if test "$(uname)" = "Darwin"; then
-		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
-		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
-	fi
-fi
-
-# Install dependencies
-set -o pipefail
-info "installing dependencies"
-if source bin/dot | while read -r data; do info "$data"; done; then
-	success "dependencies installed"
-else
-	fail "error installing dependencies"
-	exit 1
-fi
-
-if [ "$(basename "$SHELL")" != "zsh" ]; then
-	echo "Setting Zsh as the default shell"
-	if chsh -s $(which zsh); then
-		success "Zsh set as the default"
-	else
-		fail "Error setting zsh as the default shell"
-		exit 1
-	fi
-fi
-
-echo ''
-echo '  All installed!'
-exec zsh
+echo ""
+echo "  All installed!"

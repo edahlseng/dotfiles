@@ -7,25 +7,52 @@ set -e
 parentDirectory="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 dotfilesDirectory="$(cd "$( dirname "$parentDirectory" )" && pwd -P)"
 
+source "$dotfilesDirectory/scripts/logging.sh"
+
 displayUsageAndExit() {
 	echo "dot -- dotfiles management"
 	echo ""
-	echo "Usage: dot [options]"
+	echo "Usage: dot [options]."
+	echo ""
+	echo "If no options are specified, the command will ensure that the local machine is in sync with the dotfiles repository (effectively running with options -d -i -l)."
 	echo ""
 	echo "Options:"
-	echo "  -e, --edit    Open dotfiles directory for editing"
-	echo "  -h, --help    Show this help message and exit"
+	echo "  -d, --defaults  Set defaults"
+	echo "  -e, --edit      Open dotfiles directory for editing"
+	echo "  -h, --help      Show this help message and exit"
+	echo "  -i, --install   Install dependencies"
+	echo "  -l, --link      Link dotfiles into the proper place"
 	exit
 }
 
+if test $# -eq 0; then
+	# If no options are specified, run as if -d -i -l was called
+	defaults="true"
+	link="true"
+	install="true"
+else
+	defaults="false"
+	link="false"
+	install="false"
+fi
+
 while test $# -gt 0; do
 	case "$1" in
-		"-h"|"--help")
-			displayUsageAndExit
+		"-d"|"--defaults")
+			defaults="true"
 			;;
 		"-e"|"--edit")
 			exec "$EDITOR" "$dotfilesDirectory"
 			exit
+			;;
+		"-h"|"--help")
+			displayUsageAndExit
+			;;
+		"-i"|"--install")
+			install="true"
+			;;
+		"-l"|"--link")
+			link="true"
 			;;
 		*)
 			echo "Invalid option: $1"
@@ -35,15 +62,46 @@ while test $# -gt 0; do
 	shift
 done
 
+# ------------------------------------------------------------------------------
+# Set defaults
+# ------------------------------------------------------------------------------
+
 export ZSH=$HOME/.dotfiles
 
-# Set macOS defaults
-$ZSH/macos/set-defaults.sh
+if [ "$defaults" == "true" ]; then
+	echo "Setting defaults..."
 
-# Upgrade homebrew
-echo "› brew update"
-brew update
+	# Set macOS defaults
+	$ZSH/macos/set-defaults.sh
 
-# Install software
-echo "› $ZSH/script/install"
-$ZSH/scripts/install
+	if [ "$(basename "$SHELL")" != "zsh" ]; then
+		echo "Setting Zsh as the default shell"
+		if chsh -s $(which zsh); then
+			success "Zsh set as the default"
+		else
+			fail "Error setting zsh as the default shell"
+			exit 1
+		fi
+	fi
+
+	echo "Defaults set!"
+	echo ""
+fi
+
+# ------------------------------------------------------------------------------
+# Link dotfiles
+# ------------------------------------------------------------------------------
+
+if [ "$link" == "true" ]; then
+	echo "Linking dotfiles..."
+	"$dotfilesDirectory/scripts/link.sh"
+fi
+
+# ------------------------------------------------------------------------------
+# Install dependencies
+# ------------------------------------------------------------------------------
+
+if [ "$install" == "true" ]; then
+	echo "Installing dependencies..."
+	"$dotfilesDirectory/scripts/install.sh"
+fi
