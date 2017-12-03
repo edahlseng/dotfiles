@@ -3,6 +3,7 @@ cask_args appdir: '/Applications'
 tap "caskroom/cask"
 tap "homebrew/bundle"
 tap "homebrew/core"
+tap "dunn/emacs"
 
 brew "clang-format"
 brew "fwup"
@@ -16,6 +17,7 @@ brew "sbcl"
 brew "terraform"
 brew "wget"
 brew "youtube-dl"
+brew "dunn/emacs/slime"
 
 cask "arduino"
 cask "atom"
