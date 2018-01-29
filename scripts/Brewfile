@@ -21,6 +21,7 @@ brew "wget"
 brew "youtube-dl"
 brew "dunn/emacs/slime"
 
+cask "anki"
 cask "arduino"
 cask "atom"
 cask "dash"
