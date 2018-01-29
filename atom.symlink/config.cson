@@ -10,7 +10,7 @@
     ]
   editor:
     fontFamily: "Menlo Regular"
-    fontSize: 12
+    fontSize: 11
     invisibles: {}
     showInvisibles: true
     softTabs: false
