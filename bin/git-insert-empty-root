@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Save the current branch so we can check it out again when we are done
+INITIAL_BRANCH=`git symbolic-ref --short HEAD`
+CURRENT_ROOT=$(git rev-list --max-parents=0 HEAD)
+TEMP_BRANCH="__tmp-newroot"
+
+# Create a new temporary branch at a new root, and remove everything from the tree
+git checkout --orphan "$TEMP_BRANCH"
+git rm -rf --cached .
+git clean -f -d
+
+# Commit this empty state with proper metadata (based of current root commit)
+export GIT_AUTHOR_NAME="$(git show --format='%an' --no-patch $CURRENT_ROOT)"
+export GIT_AUTHOR_EMAIL="$(git show --format='%ae' --no-patch $CURRENT_ROOT)"
+export GIT_AUTHOR_DATE="$(gdate --date "$(git show --format='%aI' --no-patch $CURRENT_ROOT) - 1 second" --iso-8601=seconds)"
+export GIT_COMMITTER_NAME="$(git show --format='%cn' --no-patch $CURRENT_ROOT)"
+export GIT_COMMITTER_EMAIL="$(git show --format='%ce' --no-patch $CURRENT_ROOT)"
+export GIT_COMMITTER_DATE="$(gdate --date "$(git show --format='%cI' --no-patch $CURRENT_ROOT) - 1 second" --iso-8601=seconds)"
+git commit --allow-empty -m 'Empty Root Commit'
+NEWROOT=`git rev-parse HEAD`
+
+# Check out the commit we just made and delete the temporary branch
+git checkout --detach "$NEWROOT"
+git branch -D "$TEMP_BRANCH"
+
+# Rewrite all the local branches to insert the new root commit, delete the
+# original/* branches left behind, and check out the rewritten initial branch
+# The '--tag-name-filter cat' options means that tags will be rewritten to point to the newly created commits
+git filter-branch --parent-filter "sed \"s/^\$/-p $NEWROOT/\"" --tag-name-filter cat -- --branches
+git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+git checkout "$INITIAL_BRANCH"
+
+echo ""
+echo "Confirm that everything looks correct. If so, next steps are:"
+echo "* From this device: 'git push --force' (for each branch)"
+echo "* From other devices:"
+echo "  * git fetch --all"
+echo "  * git reset --hard origin/<branch-name>"
