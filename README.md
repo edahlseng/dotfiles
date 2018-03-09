@@ -1,8 +1,7 @@
 dotfiles
 ========
 
-Your dotfiles are how you personalize your system. These are mine. [Fork it](https://github.com/edahlseng/dotfiles/fork), remove what you don't
-use, and build on what you do use.
+Your dotfiles are how you personalize your system. These are mine. [Fork it](https://github.com/edahlseng/dotfiles/fork), remove what you don't use, and build on what you do use.
 
 Setup
 --------------------------------------------------------------------------------
