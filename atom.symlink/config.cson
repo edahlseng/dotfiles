@@ -12,6 +12,7 @@
     fontFamily: "Menlo Regular"
     fontSize: 11
     invisibles: {}
+    scrollPastEnd: true
     showInvisibles: true
     softTabs: false
     tabLength: 4
@@ -24,10 +25,16 @@
     fixOnSave: true
   "linter-ui-default":
     panelHeight: 69
+    showPanel: true
   metrics:
     userId: "352f3ca5a6c75d15bba3a83230f85e64aca3a111"
   "one-dark-ui": {}
   "tree-view": {}
+  "vim-mode-plus":
+    blackholeRegisteredOperators: [
+      "change*"
+    ]
+    keymapPToPutWithAutoIndent: true
   welcome:
     showOnStartup: false
 ".bibtex.text":
