@@ -63,17 +63,23 @@ while test $# -gt 0; do
 done
 
 # ------------------------------------------------------------------------------
-# Set defaults
+# Link main dotfiles directory
 # ------------------------------------------------------------------------------
 
-export ZSH=$HOME/.dotfiles
+if [ ! -e ~/.dotfiles ]; then
+	ln -s "$dotfilesDirectory" ~/.dotfiles
+fi
+
+# ------------------------------------------------------------------------------
+# Set defaults
+# ------------------------------------------------------------------------------
 
 if [ "$defaults" == "true" ]; then
 	echo ""
 	echo "Setting defaults..."
 
 	# Set macOS defaults
-	$ZSH/macos/set-defaults.sh
+	"$dotfilesDirectory"/macos/set-defaults.sh
 
 	if [ "$(basename "$SHELL")" != "zsh" ]; then
 		echo "Setting Zsh as the default shell"
@@ -95,7 +101,7 @@ fi
 if [ "$link" == "true" ]; then
 	echo ""
 	echo "Linking dotfiles..."
-	"$dotfilesDirectory/scripts/link.sh"
+	"$dotfilesDirectory"/scripts/link.sh
 fi
 
 # ------------------------------------------------------------------------------
@@ -105,11 +111,12 @@ fi
 if [ "$install" == "true" ]; then
 	echo ""
 	echo "Installing dependencies..."
-	"$dotfilesDirectory/scripts/install.sh"
+	"$dotfilesDirectory"/scripts/install.sh
 fi
 
 # ------------------------------------------------------------------------------
 # Backup Atom packages
 # ------------------------------------------------------------------------------
 
-$ZSH/bin/atom-package-backup
+# TODO: check if Atom has just been freshly installed, and install packages in that case, instead
+"$dotfilesDirectory"/bin/atom-package-backup
