@@ -6,6 +6,7 @@ tap "homebrew/core"
 tap "dunn/emacs"
 
 brew "clang-format"
+brew "ffmpeg"
 brew "fwup"
 brew "iperf"
 brew "kops"
