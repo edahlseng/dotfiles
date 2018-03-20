@@ -1,6 +1,6 @@
 atom.symlink/*
 !atom.symlink/config.cson
-!atom.symlink/init.coffee
+!atom.symlink/init.js
 !atom.symlink/config.cson
 !atom.symlink/keymap.cson
 !atom.symlink/packages.txt

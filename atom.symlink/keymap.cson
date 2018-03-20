@@ -22,3 +22,6 @@
 
 'body':
   'shift-cmd-Z': 'core:redo'
+'atom-text-editor.vim-mode-plus:not(.insert-mode)':
+    'd': 'vim-mode-plus-user:delete-with-blackhole-register'
+    'x': 'vim-mode-plus:delete'
