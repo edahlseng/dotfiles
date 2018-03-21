@@ -27,4 +27,5 @@ monokai@0.24.0
 react@0.18.0
 teletype@0.9.0
 vim-mode-plus@1.28.1
+vim-mode-plus-keymaps-for-surround@0.2.1
 
