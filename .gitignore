@@ -1,3 +1,5 @@
+.DS_Store
+
 atom.symlink/*
 !atom.symlink/config.cson
 !atom.symlink/init.js
