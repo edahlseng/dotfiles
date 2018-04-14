@@ -19,6 +19,9 @@
 	excludesfile = ~/.gitignore
 	editor = vim
 	trustctime = false
+	# For the reasons on setting trustctime = false, see:
+	# http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/#
+	# https://stackoverflow.com/questions/5074136/git-rebase-fails-your-local-changes-to-the-following-files-would-be-overwritte
 [apply]
 	whitespace = nowarn
 [mergetool]
