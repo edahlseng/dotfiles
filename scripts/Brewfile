@@ -37,6 +37,7 @@ cask "lingo"
 cask "mactex"
 cask "rescuetime"
 cask "sketch"
+cask "skype"
 cask "spectacle"
 cask "wireshark"
 
