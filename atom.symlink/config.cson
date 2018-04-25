@@ -1,4 +1,5 @@
 "*":
+  "autocomplete-flow": {}
   "autocomplete-python":
     useKite: false
   core:
