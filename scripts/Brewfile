@@ -43,12 +43,14 @@ cask "wireshark"
 
 mas "Affinity Designer", id: 824171161
 mas "Affinity Photo", id: 824183456
+mas "Fusion360", id: 868968810
 mas "GarageBand", id: 682658836
+mas "iConvert Icons", id: 515197296
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Paprika Recipe Manager", id: 451907568
+mas "Paprika Recipe Manager 3", id: 1303222628
 mas "Pocket", id: 568494494
 mas "Slack", id: 803453959
 mas "WeChat", id: 836500024
