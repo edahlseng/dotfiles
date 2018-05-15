@@ -1,0 +1,23 @@
+#!/bin/bash
+
+function todayIsAWeekday {
+	[ $(date +%u) -le 5 ]
+}
+
+function currentlyDuringWorkingHours {
+	[ $(date +%H%M) -gt 0800 ] && [ $(date +%H%M) -lt 1900 ]
+}
+
+if [ $# -eq 0 ]; then
+	if todayIsAWeekday && currentlyDuringWorkingHours; then
+		echo "Only showing work tasks"
+		echo ""
+		task +work
+	else
+		echo "Only showing personal tasks"
+		echo ""
+		task -work
+	fi
+else
+	task "$@"
+fi
