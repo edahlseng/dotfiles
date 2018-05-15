@@ -11,3 +11,6 @@ atom.symlink/*
 git/gitconfig.local.symlink
 
 ssh.symlink
+
+bugwarrior.secret
+taskWorkProjectUrgency
