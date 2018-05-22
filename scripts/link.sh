@@ -96,6 +96,7 @@ installDotfiles() {
 	local overwrite_all=false backup_all=false skip_all=false
 
 	# Get array of files regardless of special characters (like spaces) in the filenames
+	# TODO: do we need the second for loop? Can we just loop within the while loop?
 	files=()
 	while IFS='' read -r -d $'\0'; do
 		files+=("$REPLY")
@@ -115,6 +116,30 @@ installDotfilesDirectory() {
 	linkFile "$dotfilesRoot" "$HOME/.dotfiles"
 }
 
+installLaunchAgents() {
+	info 'installing Launch Agents'
+
+	local overwrite_all=false backup_all=false skip_all=false
+
+	# TODO: do we need the second for loop? Can we just loop within the while loop?
+	files=()
+	while IFS='' read -r -d $'\0'; do
+		files+=("$REPLY")
+	done < <(find -H "$dotfilesRoot"/macos/LaunchAgents -maxdepth 1 -name '*.plist' -print0)
+
+	for source in "${files[@]}"; do
+		destination="$HOME/Library/LaunchAgents/$(basename "$source")"
+		launchctl unload "$destination"
+		linkFile "$source" "$destination"
+		launchctl load "$destination"
+	done
+
+	while IFS='' read -r -d $'\0'; do
+		info "Removing broken link: $REPLY"
+		/bin/rm "$REPLY"
+	done < <(find "$HOME"/Library/LaunchAgents -type l ! -exec test -e {} \; -print0)
+}
+
 # Startup
 # ------------------------------------------------------------------------------
 
@@ -124,6 +149,7 @@ echo ""
 setupGitConfig
 installDotfiles
 installDotfilesDirectory
+installLaunchAgents
 
 echo ""
 echo "  All installed!"

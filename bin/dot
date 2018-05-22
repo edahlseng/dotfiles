@@ -17,11 +17,12 @@ displayUsageAndExit() {
 	echo "If no options are specified, the command will ensure that the local machine is in sync with the dotfiles repository (effectively running with options -d -i -l)."
 	echo ""
 	echo "Options:"
-	echo "  -d, --defaults  Set defaults"
-	echo "  -e, --edit      Open dotfiles directory for editing"
-	echo "  -h, --help      Show this help message and exit"
-	echo "  -i, --install   Install dependencies"
-	echo "  -l, --link      Link dotfiles into the proper place"
+	echo "  -d, --defaults          Set defaults"
+	echo "  -e, --edit              Open dotfiles directory for editing"
+	echo "  -g, --gui-sudo-askpass  Use GUI prompt to ask for sudo password"
+	echo "  -h, --help              Show this help message and exit"
+	echo "  -i, --install           Install dependencies"
+	echo "  -l, --link              Link dotfiles into the proper place"
 	exit
 }
 
@@ -35,6 +36,7 @@ else
 	link="false"
 	install="false"
 fi
+guiSudoAskpass="false"
 
 while test $# -gt 0; do
 	case "$1" in
@@ -44,6 +46,9 @@ while test $# -gt 0; do
 		"-e"|"--edit")
 			exec "$EDITOR" "$dotfilesDirectory"
 			exit
+			;;
+		"-g"|"--gui-sudo-askpass")
+			guiSudoAskpass="true"
 			;;
 		"-h"|"--help")
 			displayUsageAndExit
@@ -61,6 +66,38 @@ while test $# -gt 0; do
 	esac
 	shift
 done
+
+atExit() {
+	if [ ! -z "${AT_EXIT}" ]; then
+		AT_EXIT+=';'
+	fi
+
+	AT_EXIT+="${*}"
+	trap "${AT_EXIT}" EXIT
+}
+
+# ------------------------------------------------------------------------------
+# Set up GUI password dialog for sudo, if specified
+# ------------------------------------------------------------------------------
+
+if [ "$guiSudoAskpass" == "true" ]; then
+	sudoGuiAskpassScript="$(mktemp)"
+
+	deleteSudoAskpassScript() {
+		/bin/rm -f "$sudoGuiAskpassScript"
+	}
+
+	atExit deleteSudoAskpassScript
+
+	cat<<-'EOF' > "$sudoGuiAskpassScript"
+	#!/bin/bash
+	password="$(osascript -e 'Tell application "System Events" to display dialog "dotfiles is requesting your administrator password:" default answer "" with hidden answer' -e 'text returned of result' 2> /dev/null)"
+	echo "$password"
+	EOF
+
+	chmod +x "$sudoGuiAskpassScript"
+	export SUDO_ASKPASS="$sudoGuiAskpassScript"
+fi
 
 # ------------------------------------------------------------------------------
 # Link main dotfiles directory
