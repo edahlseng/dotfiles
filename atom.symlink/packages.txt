@@ -4,7 +4,7 @@ busy-signal@1.4.3
 clang-format@1.30.0
 intentions@1.1.5
 jslint@1.5.1
-language-babel@2.84.0
+language-babel@2.85.0
 language-bb@0.2.4
 language-docker@1.1.8
 language-groovy@0.7.0
@@ -23,7 +23,7 @@ linter-eslint@8.4.1
 linter-flow@5.6.1
 linter-javac@1.9.4
 linter-pylint@2.1.1
-linter-stylelint@4.2.0
+linter-stylelint@4.3.0
 linter-swagger@0.4.2
 linter-ui-default@1.7.1
 monokai@0.24.0
