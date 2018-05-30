@@ -1,0 +1,32 @@
+{
+	"env": {
+		"es6": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:prettier/recommended"
+	],
+	"parser": "babel-eslint",
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"globals": {
+		"global": false,
+		"window": false,
+		"__dirname": false,
+		"__filename": false,
+		"process": false
+	},
+	"rules": {
+		"curly": ["warn", "multi-line"],
+		"global-require": "error",
+		"linebreak-style": ["error", "unix"],
+		"no-nested-ternary": "error",
+		"no-undef": "error",
+		"no-unneeded-ternary": "error",
+		"no-var": "error",
+		"prefer-arrow-callback": "error",
+		"prefer-const": "error",
+		"spaced-comment": ["error", "always"]
+	}
+}
