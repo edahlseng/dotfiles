@@ -1,16 +1,8 @@
 :set number
 syntax on
 
-" Remap movement keys for dvorak
-" h = left, t = down, n = up, s = right
-"noremap h h
-"noremap t j
-"noremap n k
-"noremap s l
-" Since we remapped the movement keys we now need to map l/L to n/N (look/lookback to next/previous)
-"noremap l n
-"noremap L N
-
+noremap x d
+nnoremap d "_d
 
 "TODO: consolidate below options
 
