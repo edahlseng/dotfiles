@@ -28,6 +28,12 @@ done
 git remote | xargs git remote prune
 branchesToDelete=$(git branch -lvv | grep -v "\*" | cut -c 3- | awk '($3 ~ /^\[[^\]]+:$/ && $4 ~ /gone\]/) || ($3 !~ /^\[[^\]]+\/[^\]]+[\]:]$/) {print $1}')
 
+if [ -z "$branchesToDelete" ]; then
+	echo ""
+	echo "Found no local branches available to delete."
+	exit
+fi
+
 echo ""
 echo "Found the following local branches whose remotes have been deleted:"
 echo "$branchesToDelete"
