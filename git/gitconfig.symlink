@@ -11,7 +11,7 @@
 	count   = !git shortlog -sn
 	sweep   = !$ZSH/bin/git-sweep
 	create	= !$ZSH/bin/git-create
-	last	= log -l HEAD
+	last	= log -1 HEAD
 [color]
 	diff = auto
 	status = auto
