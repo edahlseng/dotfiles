@@ -1,0 +1,91 @@
+#!/bin/bash
+
+getUpstreamUrl() {
+	remote="$1"
+	base="$(git remote get-url origin | sed -e 's/^.*://' -e 's/\/.*$//')"
+	currentBranch=$(git rev-parse --abbrev-ref HEAD)
+	echo $(git remote get-url $remote | sed -e 's/git@github.com:/https:\/\/github.com\//' -e 's/\.git$//')/compare/master...$base:$currentBranch
+}
+
+promptContinue() {
+	echo ""
+	read -r -p "${1:-Would you like to continue?} (y/n) " continue
+
+	continue="$(echo "$continue" | tr "[:upper:]" "[:lower:]")"
+	case "$continue" in
+		"y"|"yes") return 0;;
+		"n"|"no") return 1;;
+		* ) echo "Please enter \"y\" or \"n\""; promptCleanup;;
+	esac
+}
+
+originHasRemoteBranch() {
+	currentBranch=$(git rev-parse --abbrev-ref HEAD)
+	remoteHead=$(git ls-remote --heads $(git remote get-url origin) $currentBranch)
+	if [ -z "$remoteHead" ]; then
+		return 1
+	fi
+	return 0
+}
+
+needPush() {
+	if [ $(git rev-parse --is-inside-work-tree 2>/dev/null) ]; then
+		number=$(git cherry -v origin/$(git symbolic-ref --short HEAD 2>/dev/null) 2>/dev/null | wc -l | bc)
+
+		if [[ $number != 0 ]]; then
+			return 0
+		fi
+	fi
+
+	return 1
+}
+
+echo ""
+echo "Rebasing..."
+echo ""
+
+if git remote | grep upstream > /dev/null; then
+	git fetch upstream master
+	git rebase upstream/master
+	upstreamUrl=$(getUpstreamUrl upstream)
+elif git remote | grep origin > /dev/null; then
+	git fetch origin master
+	git rebase origin/master
+	upstreamUrl=$(getUpstreamUrl origin)
+else
+	echo "Could not find an upstream remote to submit a pull request against."
+fi
+
+echo ""
+echo "Running checks..."
+echo ""
+
+if [ -e package.json ]; then
+	npm run check
+fi
+
+if [ -e bin/covalence ]; then
+	bin/covalence ci
+elif [ -e infra/bin/covalence ]; then
+	infra/bin/covalence ci
+fi
+
+echo ""
+
+if ! originHasRemoteBranch; then
+	if promptContinue "The origin remote does not have your current local branch. Would you like to push this branch to origin?"; then
+		currentBranch=$(git rev-parse --abbrev-ref HEAD)
+		git push --set-upstream origin "$currentBranch"
+	else
+		exit
+	fi
+elif needPush; then
+	if promptContinue "There are unpushed changes. Would you like to force push?"; then
+		echo ""
+		git push --force
+	else
+		exit
+	fi
+fi
+
+open "$upstreamUrl"
