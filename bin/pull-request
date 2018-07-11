@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 getUpstreamUrl() {
 	remote="$1"
 	base="$(git remote get-url origin | sed -e 's/^.*://' -e 's/\/.*$//')"
