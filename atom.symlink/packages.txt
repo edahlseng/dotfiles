@@ -27,6 +27,7 @@ linter-stylelint@4.3.2
 linter-swagger@0.4.2
 linter-ui-default@1.7.1
 monokai@0.24.0
+prettier-atom@0.54.0
 teletype@0.13.3
 vim-mode-plus@1.34.0
 vim-mode-plus-keymaps-for-surround@0.2.1

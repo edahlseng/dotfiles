@@ -30,6 +30,14 @@
   metrics:
     userId: "352f3ca5a6c75d15bba3a83230f85e64aca3a111"
   "one-dark-ui": {}
+  "prettier-atom":
+    formatOnSaveOptions:
+      enabled: true
+      isDisabledIfNoConfigFile: true
+      isDisabledIfNotInPackageJson: true
+      whitelistedGlobs: [
+        "*.json"
+      ]
   "tree-view": {}
   "vim-mode-plus":
     blackholeRegisteredOperators: [
