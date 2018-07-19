@@ -20,6 +20,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	editor = vim
+	hooksPath = ~/.dotfiles/git/hooks
 	trustctime = false
 	# For the reasons on setting trustctime = false, see:
 	# http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/#
