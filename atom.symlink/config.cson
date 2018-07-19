@@ -24,6 +24,8 @@
   linter: {}
   "linter-eslint":
     fixOnSave: true
+  "linter-flow":
+    executablePath: "./node_modules/.bin/flow"
   "linter-ui-default":
     panelHeight: 69
     showPanel: true
