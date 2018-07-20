@@ -39,9 +39,10 @@ install() {
 	find "$dotfilesDirectory" -name install.sh | grep -v scripts/install.sh | while read installer ; do sh -c "\"${installer}\"" ; done
 
 	# Python installers
-	# TODO: should maybe move this into a python directory
+	# TODO: should maybe move these into themed directories
 	pip install bugwarrior "bugwarrior[jira]" jira
 	pip3 install pylint
+	pip3 install awscli --upgrade --user
 	cd -
 }
 
