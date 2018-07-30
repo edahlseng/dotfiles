@@ -42,11 +42,11 @@ function getCurrentState() {
 
 const stateOrder = [
 	"budget",
+	"email",
 	"calendar",
-	"files",
 	"notes",
 	"reminders",
-	"email",
+	"files",
 ];
 
 const stateAction = {
