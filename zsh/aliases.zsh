@@ -9,3 +9,5 @@ alias rm='echo "Use the \"trash\" command instead" && :'
 alias task='task-wrapper'
 
 alias pr='pull-request'
+
+alias sod='start-of-day'
