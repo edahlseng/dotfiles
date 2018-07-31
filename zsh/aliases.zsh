@@ -11,3 +11,5 @@ alias task='task-wrapper'
 alias pr='pull-request'
 
 alias sod='start-of-day'
+
+alias eod='end-of-day'
