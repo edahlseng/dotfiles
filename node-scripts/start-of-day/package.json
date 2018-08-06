@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "dependencies": {
     "@eric.dahlseng/cli-tools": "^0.1.0",
+    "applescript": "^1.0.0",
     "fantasy-combinators": "0.0.1",
     "fantasy-land": "^3.5.0",
     "fluture": "^8.0.2",
