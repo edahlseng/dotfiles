@@ -23,6 +23,7 @@
     validateOnSave: false
   linter: {}
   "linter-eslint":
+    disableFSCache: true
     fixOnSave: true
   "linter-flow":
     executablePath: "./node_modules/.bin/flow"
