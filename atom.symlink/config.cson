@@ -1,8 +1,13 @@
 "*":
+  "atom-ide-ui":
+    "atom-ide-diagnostics-ui": {}
   "autocomplete-flow": {}
   "autocomplete-python":
     useKite: false
   core:
+    disabledPackages: [
+      "linter"
+    ]
     hideGitIgnoredFiles: false
     telemetryConsent: "limited"
     themes: [
