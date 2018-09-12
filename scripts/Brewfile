@@ -6,6 +6,7 @@ tap "homebrew/core"
 tap "dunn/emacs"
 tap "edahlseng/core"
 
+brew "awscli"
 brew "clang-format"
 brew "coreutils"
 brew "ffmpeg"
