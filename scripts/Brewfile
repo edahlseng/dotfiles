@@ -7,6 +7,7 @@ tap "dunn/emacs"
 tap "edahlseng/core"
 
 brew "awscli"
+brew "circleci"
 brew "clang-format"
 brew "coreutils"
 brew "ffmpeg"
