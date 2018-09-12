@@ -27,19 +27,18 @@ brew update
 
 install() {
 	cd "$parentDirectory"
+
 	# Run Homebrew through the Brewfile
 	echo "› brew bundle"
-	brew bundle -v
+	brew bundle install -v --file="$parentDirectory/Brewfile"
 
 	# Uninstall all Homebrew formulae not listed in Brewfile
-	brew bundle cleanup
+	brew bundle cleanup --force --zap --file="$parentDirectory/Brewfile"
 
 	# find the installers and run them iteratively
-	# TODO: will need to make sure we use the proper base directory for this command
 	find "$dotfilesDirectory" -name install.sh | grep -v scripts/install.sh | while read installer ; do sh -c "\"${installer}\"" ; done
 
 	# Python installers
-	# TODO: should maybe move these into themed directories
 	pip install bugwarrior "bugwarrior[jira]" jira
 	pip3 install pylint
 	cd -
