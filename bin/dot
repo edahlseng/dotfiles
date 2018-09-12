@@ -7,7 +7,7 @@ set -e
 parentDirectory="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 dotfilesDirectory="$(cd "$( dirname "$parentDirectory" )" && pwd -P)"
 
-source "$dotfilesDirectory/scripts/logging.sh"
+source "$dotfilesDirectory/system/logging.sh"
 
 displayUsageAndExit() {
 	echo "dot -- dotfiles management"
@@ -138,7 +138,7 @@ fi
 if [ "$link" == "true" ]; then
 	echo ""
 	echo "Linking dotfiles..."
-	"$dotfilesDirectory"/scripts/link.sh
+	"$dotfilesDirectory"/system/link.sh
 fi
 
 # ------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ fi
 if [ "$install" == "true" ]; then
 	echo ""
 	echo "Installing dependencies..."
-	"$dotfilesDirectory"/scripts/install.sh
+	"$dotfilesDirectory"/system/install.sh
 fi
 
 # ------------------------------------------------------------------------------
