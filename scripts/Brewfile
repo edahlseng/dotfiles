@@ -55,6 +55,7 @@ cask "sketch"
 cask "skype"
 cask "spectacle"
 cask "torbrowser"
+cask "vlc"
 cask "wireshark"
 
 mas "Affinity Designer", id: 824171161
