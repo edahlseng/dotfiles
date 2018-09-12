@@ -47,6 +47,7 @@ cask "rescuetime"
 cask "sketch"
 cask "skype"
 cask "spectacle"
+cask "torbrowser"
 cask "wireshark"
 
 mas "Affinity Designer", id: 824171161
