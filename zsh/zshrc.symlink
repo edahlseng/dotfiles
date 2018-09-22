@@ -8,7 +8,7 @@ export ZSH=$HOME/.dotfiles
 
 # all of our zsh files
 typeset -U configFiles
-configFiles=($ZSH/**/*.zsh)
+configFiles=($ZSH/*/*.zsh) # Using $ZSH/*/*.zsh here decreases startup time significantly over $ZSH/**/*.zsh
 
 # load the path files
 for file in ${(M)configFiles:#*/path.zsh}; do
