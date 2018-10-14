@@ -1,18 +1,20 @@
 atom-ide-debugger-node@0.7.3
 atom-ide-ui@0.13.0
-autocomplete-python@1.10.11
+autocomplete-python@1.10.12
 busy-signal@1.4.3
 clang-format@1.30.0
 ide-flowtype@0.23.1
+ide-typescript@0.7.7
 intentions@1.1.5
 jslint@1.5.1
 language-babel@2.85.0
 language-bb@0.2.5
 language-docker@1.1.8
 language-groovy@0.7.0
+language-haskell@1.17.8
 language-hcl@0.4.0
 language-html-swig@2.0.1
-language-latex@1.1.1
+language-latex@1.2.0
 language-lisp@0.2.0
 language-matlab@0.2.1
 language-nginx@0.8.0
@@ -32,6 +34,6 @@ linter-ui-default@1.7.1
 monokai@0.24.0
 prettier-atom@0.55.2
 teletype@0.13.3
-vim-mode-plus@1.34.0
+vim-mode-plus@1.35.0
 vim-mode-plus-keymaps-for-surround@0.2.1
 
