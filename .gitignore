@@ -17,3 +17,4 @@ taskWorkProjectUrgency
 
 config.symlink/gcloud
 config.symlink/configstore
+config.symlink/direnv/allow/*

@@ -18,7 +18,7 @@
 	branch = auto
 	ui = true
 [core]
-	excludesfile = ~/.gitignore
+	excludesfile = /Users/ericdahlseng/.gitignore_global
 	editor = vim
 	hooksPath = ~/.dotfiles/git/hooks
 	trustctime = false
