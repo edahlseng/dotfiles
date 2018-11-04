@@ -1,0 +1,34 @@
+# Type(<scope>): (If applied, this commit will...) <subject>
+# |<----  Using a Maximum Of 50 Characters  ---->|
+
+# <body> (Why is this change being made?)
+# |<----   Try to limit each line to a maximum of 72 characters   ---->|
+
+# <footer> (Provide links or keys to any relevant tickets, articles or other resources)
+
+# --- COMMIT END ---------------------------------------------------------------
+# Type can be
+#    feat     (new feature)
+#    fix      (bug fix)
+#    refactor (refactoring production code)
+#    style    (formatting, missing semi colons, etc; no code change)
+#    docs     (changes to documentation)
+#    test     (adding or refactoring tests; no production code change)
+#    chore    (updating grunt tasks etc; no production code change)
+# ------------------------------------------------------------------------------
+# Remember to
+#    Capitalize the subject line
+#    Use the imperative mood in the subject line
+#    Do not end the subject line with a period
+#    Separate subject from body with a blank line
+#    Use the body to explain what and why vs. how
+#    Can use multiple lines with "-" for bullet points in body
+# ------------------------------------------------------------------------------
+# GitHub Issue Processing
+#     Addresses #28
+# ------------------------------------------------------------------------------
+# Jira Issue Processing
+#     ISSUE_KEY #time 10m
+#     ISSUE_KEY #comment This is a comment
+#     ISSUE_KEY #done
+# ------------------------------------------------------------------------------
