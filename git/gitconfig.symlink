@@ -19,6 +19,7 @@
 	ui = true
 [core]
 	excludesfile = /Users/ericdahlseng/.gitignore_global
+	attributesFile = /Users/ericdahlseng/.gitattributes_global
 	editor = vim
 	hooksPath = ~/.dotfiles/git/hooks
 	trustctime = false
@@ -41,3 +42,6 @@
 	default = simple
 [commit]
 	template = ~/.git-commit-template.txt
+[merge "npm-merge-driver"]
+	name = Automatically merge npm lockfiles
+	driver = npx npm-merge-driver merge %A %O %B %P
