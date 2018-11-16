@@ -1,5 +1,5 @@
 # Type(<scope>): (If applied, this commit will...) <subject>
-# |<----  Using a Maximum Of 50 Characters  ---->|
+# |<--  Using a soft maximum of 50 characters -->| hard max of 72 ---->|
 
 # <body> (Why is this change being made?)
 # |<----   Try to limit each line to a maximum of 72 characters   ---->|
