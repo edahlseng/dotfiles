@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+parentDirectory=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
+
+source "$parentDirectory"/common.sh $1 $2
+
+check_run package.json "npm_config_package_lock=false npm install"
