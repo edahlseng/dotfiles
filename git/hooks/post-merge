@@ -2,6 +2,6 @@
 
 parentDirectory=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 
-source "$parentDirectory"/common.sh
+source "$parentDirectory"/common.sh "" # Note: need to pass an empty string to override the arguments for this script
 
 check_run package.json "npm_config_package_lock=false npm install"
