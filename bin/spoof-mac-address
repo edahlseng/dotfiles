@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -e
+
+promptContinue() {
+	read -r -p "$1 (y/n) " shouldContinue
+
+	shouldContinue="$(echo "$shouldContinue" | tr "[:upper:]" "[:lower:]")"
+	case "$shouldContinue" in
+		"y"|"yes") ;;
+		"n"|"no") exit;;
+		*) echo "\nPlease enter \"y(es)\" or \"n(o)\"\n"; promptContinue "$@";;
+	esac
+}
+
+currentMacAddress() {
+	sudo ifconfig "${1}" ether | tail -n 1 | awk '{print $2}'
+}
+
+promptContinue "Are you disconnected from the network?"
+
+interfaceName=$(networksetup -listallhardwareports | grep Wi-Fi -A 1 | tail -n 1 | awk '{print $2}')
+previousMacAddress=$(currentMacAddress "${interfaceName}")
+newMacAddress=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+
+echo "\nSpoofing MAC address, your password may be required..."
+sudo ifconfig "${interfaceName}" ether "${newMacAddress}"
+
+echo ""
+echo "Real MAC address: $(networksetup -getmacaddress Wi-Fi | awk '{print $3}')"
+echo "Previous MAC address: ${previousMacAddress}"
+echo "Current MAC address: $(currentMacAddress "${interfaceName}")"
+echo ""
+echo "You will need to reconnect to the network."
