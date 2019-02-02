@@ -12,6 +12,7 @@
 	sweep   = !$ZSH/bin/git-sweep
 	create	= !$ZSH/bin/git-create
 	last	= log -1 HEAD
+	master  = !git fetch $(git for-each-ref --format='%(upstream:remotename)' refs/heads/master) && git checkout -B master $(git for-each-ref --format='%(upstream:short)' refs/heads/master)
 [color]
 	diff = auto
 	status = auto
