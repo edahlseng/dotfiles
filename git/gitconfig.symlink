@@ -13,6 +13,7 @@
 	create	= !$ZSH/bin/git-create
 	last	= log -1 HEAD
 	master  = !git fetch $(git for-each-ref --format='%(upstream:remotename)' refs/heads/master) && git checkout -B master $(git for-each-ref --format='%(upstream:short)' refs/heads/master)
+	hub		= !open "$(git remote get-url origin | sed 's/^git@github\\.com:/https:\\/\\/github.com\\//' | sed -E 's/^(.+)\\.git$/\\1/')"
 [color]
 	diff = auto
 	status = auto
