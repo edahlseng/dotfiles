@@ -15,6 +15,8 @@
 
 if [ ! -z "$1" ] && [ -s "$AREAS/Shaper -- Repos/$1" ]; then
   cd "$AREAS/Shaper -- Repos/$1"
-else
+elif [ ! -z "$1" ] && [ -s "$PROJECTS/$1" ]; then
   cd "$PROJECTS/$1"
+else
+  cd "$HOME/Documents/$1"
 fi
