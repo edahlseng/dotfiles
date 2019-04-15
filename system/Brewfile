@@ -47,6 +47,7 @@ brew "wget"
 brew "youtube-dl"
 brew "dunn/emacs/slime"
 brew "edahlseng/core/git-sweep"
+brew "edahlseng/core/notes-organizer"
 brew "edahlseng/core/swift-format", args: ["HEAD"]
 brew "heroku/brew/heroku"
 
