@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Finds the process that is currently listening on a given port
+
+echo "This may take some time..."
+sudo lsof -i -P | grep "${1}"
