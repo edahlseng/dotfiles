@@ -74,6 +74,7 @@ cask "spectacle"
 cask "torbrowser"
 cask "vlc"
 cask "wireshark"
+cask "xquartz"
 cask "zeplin"
 
 mas "Affinity Designer", id: 824171161
