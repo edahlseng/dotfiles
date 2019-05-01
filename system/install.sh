@@ -31,6 +31,7 @@ install() {
 	# Run Homebrew through the Brewfile
 	echo "› brew bundle"
 	brew bundle install -v --file="$parentDirectory/Brewfile"
+	$(brew --prefix)/opt/fzf/install --key-bindings --completion --update-rc # Installs useful key bindings and fuzzy completion
 
 	# Uninstall all Homebrew formulae not listed in Brewfile
 	brew bundle cleanup --force --zap --file="$parentDirectory/Brewfile"
