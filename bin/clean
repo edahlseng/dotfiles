@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+docker system prune
+brew cleanup
+yarn cache clean
+docker volume prune
