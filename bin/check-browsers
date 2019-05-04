@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if [[ -z "${1}" ]]; then
+	echo ""
+	echo "Error: no URL specified. Usage:"
+	echo ""
+	echo "    check-browsers <url>"
+	echo ""
+	exit 1
+fi
+
+osascript <<EOF
+tell application "Safari"
+	tell window 1
+		set current tab to (make new tab with properties {URL:"${1}"})
+		set current tab to (make new tab with properties {URL:"${1}"})
+	end tell
+end tell
+
+tell application "Safari" to activate
+tell application "System Events"
+	tell process "Safari"
+		click menu item "Enter Responsive Design Mode" of menu "Develop" of menu bar 1
+	end tell
+end tell
+EOF
+
+open -a "Google Chrome" "${1}"
+
+open -a "Internet Explorer"
+
+echo "${1}" | pbcopy
