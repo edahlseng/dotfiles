@@ -13,3 +13,5 @@ alias pr='pull-request'
 alias sod='start-of-day'
 
 alias eod='end-of-day'
+
+alias ubuntu='docker run --rm --interactive --tty --volume "$(pwd)":"$(pwd)" --workdir "$(pwd)" ubuntu:latest'
