@@ -5,13 +5,13 @@
 set -e
 
 parentDirectory=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
-dotfilesRoot=$(cd "$(dirname "$parentDirectory")" && pwd -P)
+dotfilesRoot=$(cd "$(dirname "${parentDirectory}")" && pwd -P)
 
-source "$parentDirectory/logging.sh"
+source "${parentDirectory}/logging.sh"
 
 setupGitConfig() {
 	if ! [ -f git/gitconfig.local.symlink ]; then
-		info 'setup gitconfig'
+		info 'Setting up gitconfig'
 
 		git_credential='cache'
 		if [ "$(uname -s)" == "Darwin" ]; then
@@ -23,30 +23,30 @@ setupGitConfig() {
 		user ' - What is your github author email?'
 		read -e git_authoremail
 
-		sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" git/gitconfig.local.symlink.example > git/gitconfig.local.symlink
+		sed -e "s/AUTHORNAME/${git_authorname}/g" -e "s/AUTHOREMAIL/${git_authoremail}/g" -e "s/GIT_CREDENTIAL_HELPER/${git_credential}/g" git/gitconfig.local.symlink.example > git/gitconfig.local.symlink
 
 		success 'gitconfig'
 	fi
 }
 
 linkFile() {
-	local src="$1" dst="$2"
+	local src="${1}" dst="${2}"
 
 	local overwrite= backup= skip=
 	local action=
 
-	if [ -f "$dst" ] || [ -d "$dst" ] || [ -L "$dst" ]; then
-		if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]; then
+	if [ -f "${dst}" ] || [ -d "${dst}" ] || [ -L "${dst}" ]; then
+		if [ "${overwrite_all}" == "false" ] && [ "${backup_all}" == "false" ] && [ "${skip_all}" == "false" ]; then
 			local currentSrc="$(readlink $dst)"
 
-			if [ "$currentSrc" == "$src" ]; then
+			if [ "${currentSrc}" == "${src}" ]; then
 				skip=true;
 			else
-				user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
+				user "File already exists: ${dst} ($(basename "${src}")), what do you want to do?\n\
 				[s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
 				read -n 1 action
 
-				case "$action" in
+				case "${action}" in
 					o )
 					overwrite=true;;
 					O )
@@ -69,81 +69,71 @@ linkFile() {
 		backup=${backup:-$backup_all}
 		skip=${skip:-$skip_all}
 
-		if [ "$overwrite" == "true" ]; then
-			rm -rf "$dst"
-			success "removed $dst"
+		if [ "${overwrite}" == "true" ]; then
+			rm -rf "${dst}"
+			success "removed ${dst}"
 		fi
 
-		if [ "$backup" == "true" ]; then
-			mv "$dst" "${dst}.backup"
-			success "moved $dst to ${dst}.backup"
+		if [ "${backup}" == "true" ]; then
+			mv "${dst}" "${dst}.backup"
+			success "moved ${dst} to ${dst}.backup"
 		fi
 
-		if [ "$skip" == "true" ]; then
-			success "skipped $src"
+		if [ "${skip}" == "true" ]; then
+			success "skipped ${src}"
 		fi
 	fi
 
-	if [ "$skip" != "true" ]; then
-		ln -s "$1" "$2"
-		success "linked $1 to $2"
+	if [ "${skip}" != "true" ]; then
+		ln -s "${1}" "${2}"
+		success "linked ${1} to ${2}"
 	fi
 }
 
 installDotfiles() {
-	info 'installing dotfiles'
+	info 'Installing dotfiles'
 
 	local overwrite_all=false backup_all=false skip_all=false
 
 	# Get array of files regardless of special characters (like spaces) in the filenames
-	# TODO: do we need the second for loop? Can we just loop within the while loop?
-	files=()
 	while IFS='' read -r -d $'\0'; do
-		files+=("$REPLY")
-	done < <(find -H "$dotfilesRoot" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -print0)
-
-	for source in "${files[@]}"; do
-		destination="$HOME/.$(basename "${source%.*}")"
-		linkFile "$source" "$destination"
-	done
+		destination="${HOME}/.$(basename "${REPLY%.*}")"
+		linkFile "${REPLY}" "${destination}"
+	done < <(find -H "$dotfilesRoot" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -not -path '*.symlinkParent' -print0)
 }
 
 installDotfilesDirectory() {
-	info 'installing dotfiles directory'
+	echo ""
+	info 'Installing dotfiles directory'
 
 	local overwrite_all=false backup_all=false skip_all=false
 
-	linkFile "$dotfilesRoot" "$HOME/.dotfiles"
+	linkFile "${dotfilesRoot}" "${HOME}/.dotfiles"
 }
 
 installLaunchAgents() {
-	info 'installing Launch Agents'
+	echo ""
+	info 'Installing Launch Agents'
 
 	local overwrite_all=false backup_all=false skip_all=false
 
-	# TODO: do we need the second for loop? Can we just loop within the while loop?
-	files=()
 	while IFS='' read -r -d $'\0'; do
-		files+=("$REPLY")
-	done < <(find -H "$dotfilesRoot"/macos/LaunchAgents -maxdepth 1 -name '*.plist' -print0)
-
-	for source in "${files[@]}"; do
-		destination="$HOME/Library/LaunchAgents/$(basename "$source")"
-		launchctl unload "$destination"
-		linkFile "$source" "$destination"
-		launchctl load "$destination"
-	done
+		destination="${HOME}/Library/LaunchAgents/$(basename "${REPLY}")"
+		launchctl unload "${destination}"
+		linkFile "${REPLY}" "${destination}"
+		launchctl load "${destination}"
+	done < <(find -H "${dotfilesRoot}"/macos/LaunchAgents -maxdepth 1 -name '*.plist' -print0)
 
 	while IFS='' read -r -d $'\0'; do
-		info "Removing broken link: $REPLY"
-		/bin/rm "$REPLY"
-	done < <(find "$HOME"/Library/LaunchAgents -type l ! -exec test -e {} \; -print0)
+		info "Removing broken link: ${REPLY}"
+		/bin/rm "${REPLY}"
+	done < <(find "${HOME}"/Library/LaunchAgents -type l ! -exec test -e {} \; -print0)
 }
 
 # Startup
 # ------------------------------------------------------------------------------
 
-cd "$dotfilesRoot"
+cd "${dotfilesRoot}"
 echo ""
 
 setupGitConfig
