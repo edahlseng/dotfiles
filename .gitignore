@@ -1,13 +1,5 @@
 .DS_Store
 
-atom.symlink/*
-!atom.symlink/config.cson
-!atom.symlink/init.js
-!atom.symlink/config.cson
-!atom.symlink/keymap.cson
-!atom.symlink/packages.txt
-!atom.symlink/styles.less
-
 git/gitconfig.local.symlink
 
 ssh.symlink

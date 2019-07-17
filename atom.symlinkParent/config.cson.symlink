@@ -1,0 +1,106 @@
+"*":
+  "atom-beautify":
+    clj:
+      beautify_on_save: true
+    general:
+      _analyticsUserId: "d23fae23-6aa4-4de1-8548-955894cc673b"
+      showLoadingView: false
+  "atom-ide-ui":
+    "atom-ide-code-format":
+      formatOnSave: true
+    "atom-ide-diagnostics-ui": {}
+    use: {}
+  "atom-package-deps":
+    ignored: [
+      "linter-clang"
+    ]
+  "autocomplete-flow": {}
+  "autocomplete-python":
+    useKite: false
+  core:
+    disabledPackages: [
+      "kak-mode"
+    ]
+    hideGitIgnoredFiles: false
+    telemetryConsent: "limited"
+    themes: [
+      "one-dark-ui"
+      "monokai"
+    ]
+  editor:
+    fontFamily: "Menlo Regular"
+    fontSize: 11
+    invisibles: {}
+    scrollPastEnd: true
+    showInvisibles: true
+    softTabs: false
+    tabLength: 4
+  "exception-reporting":
+    userId: "4fcd2bec-2eac-6f6b-f18e-07ded07847a9"
+  "fuzzy-finder":
+    scoringSystem: "fast"
+    useRipGrep: true
+  "ide-flowtype":
+    tryFlowBin: true
+  "ide-typescript":
+    javascriptSupport: false
+  jslint:
+    validateOnSave: false
+  linter: {}
+  "linter-eslint":
+    advanced:
+      disableFSCache: true
+    autofix:
+      fixOnSave: true
+    scopes: [
+      "source.js"
+      "source.jsx"
+      "source.js.jsx"
+      "source.babel"
+      "source.js-semantic"
+      "source.flow"
+    ]
+  "linter-flow":
+    executablePath: "./node_modules/.bin/flow"
+  "linter-ui-default":
+    panelHeight: 69
+  metrics:
+    userId: "352f3ca5a6c75d15bba3a83230f85e64aca3a111"
+  "one-dark-ui": {}
+  "prettier-atom":
+    formatOnSaveOptions:
+      enabled: true
+      isDisabledIfNoConfigFile: true
+      isDisabledIfNotInPackageJson: true
+      whitelistedGlobs: [
+        "*.json"
+        "*.yaml"
+        "*.yml"
+      ]
+  "tree-view": {}
+  "vim-mode-plus":
+    blackholeRegisteredOperators: [
+      "change*"
+    ]
+    keymapPToPutWithAutoIndent: true
+    keymapYToYankToLastCharacterOfLine: true
+  welcome:
+    showOnStartup: false
+".bibtex.text":
+  editor:
+    softWrap: true
+".latex.tex.text":
+  editor:
+    softWrap: true
+".pug.source":
+  editor:
+    tabLength: 2
+".source.yaml":
+  editor:
+    tabLength: 2
+".tex.text":
+  editor:
+    softWrap: true
+"package.json.source":
+  editor:
+    tabLength: 2

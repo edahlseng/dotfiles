@@ -23,7 +23,7 @@ The main file you'll want to change right off the bat is `zsh/zshrc.symlink`. `i
 Components
 -------------------------------------------------------------------------------
 
-Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say, "Java" — you can simply add a `java` directory and put files in there. Anything with an extension of `.zsh` will get automatically included into your shell. Anything with an extension of `.symlink` will get symlinked without extension into `$HOME` when you run `script/bootstrap`.
+Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say, "Java" — you can simply add a `java` directory and put files in there. Anything with an extension of `.zsh` will get automatically included into your shell. Anything with an extension of `.symlink` will get symlinked without extension into `$HOME` when you run `dot -l` (unless it resides inside a `.symlinkParent` directory, in which case the destination is slightly different, as described below).
 
 If you're interested in the philosophy behind why projects like these are awesome, you might want to read [Zach Holman's post on the subject](http://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/).
 
@@ -33,7 +33,8 @@ If you're interested in the philosophy behind why projects like these are awesom
   * **topic/path.zsh**: Any file named `path.zsh` is loaded first and is expected to setup `$PATH` or similar.
   * **topic/completion.zsh**: Any file named `completion.zsh` is loaded last and is expected to setup autocomplete.
 * **topic/install.sh**: Any file named `install.sh` is executed when you run `system/install` (which is also run by `dot`). To avoid being loaded automatically, it does not have a `.zsh` extension.
-* **\*.symlink**: Any file ending in `*.symlink` gets symlinked into your `$HOME` with a `.` prefix. This is so you can keep all of these files versioned in your dotfiles but still keep those autoloaded files in your home directory. These files get symlinked when you run `system/bootstrap`.
+* **\*.symlink**: Any file ending in `*.symlink` (and not residing in a `.symlinkParent` directory) gets symlinked into your `$HOME` with a `.` prefix. This is so you can keep all of these files versioned in your dotfiles but still keep those autoloaded files in your home directory. These files get symlinked when you run `system/bootstrap`.
+* **\*.symlinkParent/\*.symlink**: Any file ending in `*.symlinkParent` will have a corresponding directory created under `$HOME` and with a `.` prefix. Any `.symlink` files within this directory will then be symlinked into this newly created directory. This allows for files that are linked into subdirectories of `$HOME`, rather than `$HOME` directly. (Any `*.symlinkParent` directories within a `*.symlinkParent` directory continue the nesting.)
 
 Bugs
 --------------------------------------------------------------------------------

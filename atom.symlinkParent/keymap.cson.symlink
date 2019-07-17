@@ -25,3 +25,5 @@
 'atom-text-editor.vim-mode-plus:not(.insert-mode)':
     'd': 'vim-mode-plus-user:delete-with-blackhole-register'
     'x': 'vim-mode-plus:delete'
+'atom-text-editor':
+    'cmd-k l': 'pane:split-right-and-move-active-item'

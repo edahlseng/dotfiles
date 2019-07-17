@@ -29,7 +29,17 @@ setupGitConfig() {
 	fi
 }
 
-linkFile() {
+shouldAddFile() {
+	if [[ -z "${1}" ]]; then
+		echo "First parameter missing in call to internal \"addFile\" function"
+		return -1
+	fi
+
+	if [[ -z "${2}" ]]; then
+		echo "Second parameter missing in call to internal \"addFile\" function"
+		return -1
+	fi
+
 	local src="${1}" dst="${2}"
 
 	local overwrite= backup= skip=
@@ -37,7 +47,7 @@ linkFile() {
 
 	if [ -f "${dst}" ] || [ -d "${dst}" ] || [ -L "${dst}" ]; then
 		if [ "${overwrite_all}" == "false" ] && [ "${backup_all}" == "false" ] && [ "${skip_all}" == "false" ]; then
-			local currentSrc="$(readlink $dst)"
+			local currentSrc="$(readlink ${dst})"
 
 			if [ "${currentSrc}" == "${src}" ]; then
 				skip=true;
@@ -71,23 +81,62 @@ linkFile() {
 
 		if [ "${overwrite}" == "true" ]; then
 			rm -rf "${dst}"
-			success "removed ${dst}"
+			success "Removed ${dst}"
 		fi
 
 		if [ "${backup}" == "true" ]; then
 			mv "${dst}" "${dst}.backup"
-			success "moved ${dst} to ${dst}.backup"
+			success "Moved ${dst} to ${dst}.backup"
 		fi
 
 		if [ "${skip}" == "true" ]; then
-			success "skipped ${src}"
+			success "Skipped ${src}"
 		fi
 	fi
 
 	if [ "${skip}" != "true" ]; then
-		ln -s "${1}" "${2}"
-		success "linked ${1} to ${2}"
+		return 0
+	else
+		return 1
 	fi
+}
+
+linkFile() {
+	local overwrite_all=false backup_all=false skip_all=false
+
+	if shouldAddFile "${1}" "${2}"; then
+		ln -s "${1}" "${2}"
+		success "Linked ${1} to ${2}"
+	fi
+}
+
+makeSymlinkParentDirectory() {
+	local overwrite_all=false backup_all=false skip_all=false
+
+	if shouldAddFile "${1}" "${2}"; then
+		mkdir -p "${2}"
+		success "Created directory ${2}"
+	fi
+}
+
+installDotfilesFromSymlinkParent() {
+	local sourceDirectory="${1}"
+	local destinationDirectory="${2}"
+
+	makeSymlinkParentDirectory "${sourceDirectory}" "${destinationDirectory}"
+
+	# Get array of files regardless of special characters (like spaces) in the filenames
+	# Use file descriptor 3 for read here, so that further reads inside of the loop work
+	while IFS='' read -r -u 3 -d $'\0'; do
+		linkFile "${REPLY}" "${destinationDirectory}/$(basename "${REPLY%.*}")"
+	done 3< <(find -H "${sourceDirectory}" -maxdepth 1 -name '*.symlink' -not -path '*.git*' -print0)
+
+	# Get array of files regardless of special characters (like spaces) in the filenames
+	# Use file descriptor 3 for read here, so that further reads inside of the loop work
+	while IFS='' read -r -u 3 -d $'\0'; do
+		echo "${REPLY}"
+		# installDotfilesFromSymlinkParent "${REPLY}" "${destinationDirectory}/$(basename "${REPLY%.*}")"
+	done 3< <(find -H "${sourceDirectory}" -maxdepth 1 -name '*.symlinkParent' -not -path '*.git*' -not -path "${sourceDirectory}" -print0)
 }
 
 installDotfiles() {
@@ -96,10 +145,17 @@ installDotfiles() {
 	local overwrite_all=false backup_all=false skip_all=false
 
 	# Get array of files regardless of special characters (like spaces) in the filenames
-	while IFS='' read -r -d $'\0'; do
-		destination="${HOME}/.$(basename "${REPLY%.*}")"
-		linkFile "${REPLY}" "${destination}"
-	done < <(find -H "$dotfilesRoot" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -not -path '*.symlinkParent' -print0)
+	# Use file descriptor 3 for read here, so that further reads inside of the loop work
+	while IFS='' read -r -u 3 -d $'\0'; do
+		linkFile "${REPLY}" "${HOME}/.$(basename "${REPLY%.*}")"
+	done 3< <(find -H "${dotfilesRoot}" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -not -path '*.symlinkParent*' -print0)
+
+	# TODO: Will also need to update documentation regarding symlink parent
+	# Get array of files regardless of special characters (like spaces) in the filenames
+	# Use file descriptor 3 for read here, so that further reads inside of the loop work
+	while IFS='' read -r -u 3 -d $'\0'; do
+		installDotfilesFromSymlinkParent "${REPLY}" "${HOME}/.$(basename "${REPLY%.*}")"
+	done 3< <(find -H "${dotfilesRoot}" -maxdepth 1 -name '*.symlinkParent' -not -path '*.git*' -print0)
 }
 
 installDotfilesDirectory() {
