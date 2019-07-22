@@ -7,7 +7,5 @@ ssh.symlink
 bugwarrior.secret
 taskWorkProjectUrgency
 
-config.symlink/gcloud
-config.symlink/configstore
-config.symlink/direnv/allow/*
-config.symlink/karabiner/automatic_backups
+config.symlinkParent/direnv.symlink/allow
+config.symlinkParent/karabiner.symlink/automatic_backups
