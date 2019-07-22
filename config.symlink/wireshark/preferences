@@ -1,4 +1,4 @@
-# Configuration file for Wireshark 2.4.5.
+# Configuration file for Wireshark 2.6.5.
 #
 # This file is regenerated each time preferences are saved within
 # Wireshark. Making manual changes should be safe, however.
@@ -23,6 +23,10 @@
 # Place filter toolbar inside the statusbar?
 # TRUE or FALSE (case-insensitive)
 #gui.filter_toolbar_show_in_statusbar: FALSE
+
+# Restore current display filter after following a stream?
+# TRUE or FALSE (case-insensitive)
+#gui.restore_filter_after_following_stream: FALSE
 
 # Protocol-tree line style
 # One of: NONE, SOLID, DOTTED, TABBED
@@ -157,6 +161,10 @@
 # TRUE or FALSE (case-insensitive)
 #gui.interfaces_show_hidden: FALSE
 
+# Show remote interfaces in the interface selection
+# TRUE or FALSE (case-insensitive)
+#gui.interfaces_remote_display: TRUE
+
 # Hide the given interface types in the startup list
 # A string
 #gui.interfaces_hidden_types: 
@@ -259,6 +267,14 @@ gui.qt.font_name: Menlo,13,-1,5,50,0,0,0,0,0
 # TRUE or FALSE (case-insensitive)
 #gui.packet_list_separator.enabled: FALSE
 
+# Show selected packet in the Status Bar
+# TRUE or FALSE (case-insensitive)
+#gui.show_selected_packet.enabled: FALSE
+
+# Show file load time in the Status Bar
+# TRUE or FALSE (case-insensitive)
+#gui.show_file_load_time.enabled: FALSE
+
 # Show related packet indicators in the first column
 # TRUE or FALSE (case-insensitive)
 #gui.packet_list_show_related: TRUE
@@ -275,7 +291,7 @@ gui.qt.font_name: Menlo,13,-1,5,50,0,0,0,0,0
 
 # Interface link-layer header types (Ex: en0(1),en1(143),...)
 # A string
-capture.devices_linktypes: en0(1),p2p0(12),awdl0(1),bridge0(1),utun0(0),en1(1),utun1(0),en2(1),en3(1),en4(1),lo0(0),gif0(0),stf0(0),XHC0(266),XHC1(266),XHC20(266),cisco(147),randpkt(147),ssh(147),udpdump(252)
+capture.devices_linktypes: en0(1),p2p0(12),awdl0(1),bridge0(1),utun0(0),en1(1),en2(1),en3(1),en4(1),lo0(0),gif0(0),stf0(0),XHC0(266),XHC1(266),XHC20(266),ciscodump(147),randpkt(147),sshdump(147),udpdump(252)
 
 # Interface descriptions (Ex: eth0(eth0 descr),eth1(eth1 descr),...)
 # A string
@@ -291,15 +307,15 @@ capture.devices_linktypes: en0(1),p2p0(12),awdl0(1),bridge0(1),utun0(0),en1(1),u
 
 # Interface buffer size (Ex: en0(1),en1(143),...)
 # A string
-capture.devices_buffersize: en0(2),p2p0(2),awdl0(2),bridge0(2),utun0(2),en1(2),utun1(2),en2(2),en3(2),en4(2),lo0(2),gif0(2),stf0(2),XHC0(2),XHC1(2),XHC20(2),cisco(2),randpkt(2),ssh(2),udpdump(2)
+capture.devices_buffersize: en0(2),p2p0(2),awdl0(2),bridge0(2),utun0(2),en1(2),en2(2),en3(2),en4(2),lo0(2),gif0(2),stf0(2),XHC0(2),XHC1(2),XHC20(2),ciscodump(2),randpkt(2),sshdump(2),udpdump(2)
 
 # Interface snap length (Ex: en0(65535),en1(1430),...)
 # A string
-capture.devices_snaplen: en0:0(262144),p2p0:0(262144),awdl0:0(262144),bridge0:0(262144),utun0:0(262144),en1:0(262144),utun1:0(262144),en2:0(262144),en3:0(262144),en4:0(262144),lo0:0(262144),gif0:0(262144),stf0:0(262144),XHC0:0(262144),XHC1:0(262144),XHC20:0(262144),cisco:0(262144),randpkt:0(262144),ssh:0(262144),udpdump:0(262144)
+capture.devices_snaplen: en0:0(262144),p2p0:0(262144),awdl0:0(262144),bridge0:0(262144),utun0:0(262144),en1:0(262144),en2:0(262144),en3:0(262144),en4:0(262144),lo0:0(262144),gif0:0(262144),stf0:0(262144),XHC0:0(262144),XHC1:0(262144),XHC20:0(262144),ciscodump:0(262144),randpkt:0(262144),sshdump:0(262144),udpdump:0(262144)
 
 # Interface promiscuous mode (Ex: en0(0),en1(1),...)
 # A string
-capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(1),en2(1),en3(1),en4(1),lo0(1),gif0(1),stf0(1),XHC0(1),XHC1(1),XHC20(1),cisco(1),randpkt(1),ssh(1),udpdump(1)
+capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),en2(1),en3(1),en4(1),lo0(1),gif0(1),stf0(1),XHC0(1),XHC1(1),XHC20(1),ciscodump(1),randpkt(1),sshdump(1),udpdump(1)
 
 # Capture in promiscuous mode?
 # TRUE or FALSE (case-insensitive)
@@ -309,13 +325,17 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # A string
 #capture.devices_filter: 
 
-# Capture in Pcap-NG format?
+# Capture in pcapng format?
 # TRUE or FALSE (case-insensitive)
 #capture.pcap_ng: TRUE
 
 # Update packet list in real time during capture?
 # TRUE or FALSE (case-insensitive)
 #capture.real_time_update: TRUE
+
+# Disable external capture modules (extcap)
+# TRUE or FALSE (case-insensitive)
+#capture.no_extcap: FALSE
 
 # Scroll packet list during capture?
 # TRUE or FALSE (case-insensitive)
@@ -360,43 +380,39 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 
 # Remote SSH server address
 # A string
-#extcap.ssh.remotehost: 
+#extcap.ciscodump.remotehost: 
 
 # Remote SSH server port
 # A string
-#extcap.ssh.remoteport: 22
+#extcap.ciscodump.remoteport: 22
 
 # Remote SSH server username
 # A string
-#extcap.ssh.remoteusername: ericdahlseng
+#extcap.ciscodump.remoteusername: ericdahlseng
 
 # Path to SSH private key
 # A string
-#extcap.ssh.sshkey: 
+#extcap.ciscodump.sshkey: 
 
 # Remote interface
 # A string
-#extcap.ssh.remoteinterface: eth0
-
-# Remote capture command
-# A string
-#extcap.ssh.remotecapturecommand: 
-
-# Use sudo on the remote machine
-# A string
-#extcap.ssh.remotesudo: 
-
-# No promiscuous mode
-# A string
-#extcap.ssh.remotenoprom: 
+#extcap.ciscodump.remoteinterface: 
 
 # Remote capture filter
 # A string
-#extcap.ssh.remotefilter: not ((host fe80::aede:48ff:fe00:1122 or host fe80::b4ee:5478:2d00:dcad or host fe80::8c6:ea82:36d8:3261 or host fe80::d44c:caff:fe26:9ba0 or host 192.168.10.242 or host fe80::412:a040:aa67:8bf1 or host fe80::1) and port 22)
+#extcap.ciscodump.remotefilter: deny tcp host fe80::aede:48ff:fe00:1122 any eq 22, deny tcp any eq 22 host fe80::aede:48ff:fe00:1122, deny tcp host fe80::906d:8468:62e1:f9d6 any eq 22, deny tcp any eq 22 host fe80::906d:8468:62e1:f9d6, deny tcp host fe80::dce1:64ff:fe34:8f0f any eq 22, deny tcp any eq 22 host fe80::dce1:64ff:fe34:8f0f, deny tcp host 172.19.131.133 any eq 22, deny tcp any eq 22 host 172.19.131.133, deny tcp host fe80::1434:71b5:bcd6:8fc5 any eq 22, deny tcp any eq 22 host fe80::1434:71b5:bcd6:8fc5, deny tcp host fe80::1 any eq 22, deny tcp any eq 22 host fe80::1, permit ip any any
 
 # Packets to capture
 # A string
-#extcap.ssh.remotecount: 0
+#extcap.ciscodump.remotecount: 
+
+# Run in debug mode
+# A string
+#extcap.ciscodump.debug: false
+
+# Use a file for debug
+# A string
+#extcap.ciscodump.debugfile: 
 
 # Max bytes in a packet
 # A string
@@ -418,6 +434,62 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # A string
 #extcap.randpkt.type: 
 
+# Run in debug mode
+# A string
+#extcap.randpkt.debug: false
+
+# Use a file for debug
+# A string
+#extcap.randpkt.debugfile: 
+
+# Remote SSH server address
+# A string
+#extcap.sshdump.remotehost: 
+
+# Remote SSH server port
+# A string
+#extcap.sshdump.remoteport: 22
+
+# Remote SSH server username
+# A string
+#extcap.sshdump.remoteusername: ericdahlseng
+
+# Path to SSH private key
+# A string
+#extcap.sshdump.sshkey: 
+
+# Remote interface
+# A string
+#extcap.sshdump.remoteinterface: eth0
+
+# Remote capture command
+# A string
+#extcap.sshdump.remotecapturecommand: 
+
+# Use sudo on the remote machine
+# A string
+#extcap.sshdump.remotesudo: 
+
+# No promiscuous mode
+# A string
+#extcap.sshdump.remotenoprom: 
+
+# Remote capture filter
+# A string
+#extcap.sshdump.remotefilter: not ((host fe80::aede:48ff:fe00:1122 or host fe80::906d:8468:62e1:f9d6 or host fe80::dce1:64ff:fe34:8f0f or host 172.19.131.133 or host fe80::1434:71b5:bcd6:8fc5 or host fe80::1) and port 22)
+
+# Packets to capture
+# A string
+#extcap.sshdump.remotecount: 0
+
+# Run in debug mode
+# A string
+#extcap.sshdump.debug: false
+
+# Use a file for debug
+# A string
+#extcap.sshdump.debugfile: 
+
 # Listen port
 # A string
 #extcap.udpdump.port: 5555
@@ -426,33 +498,13 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # A string
 #extcap.udpdump.payload: data
 
-# Remote SSH server address
+# Run in debug mode
 # A string
-#extcap.cisco.remotehost: 
+#extcap.udpdump.debug: false
 
-# Remote SSH server port
+# Use a file for debug
 # A string
-#extcap.cisco.remoteport: 22
-
-# Remote SSH server username
-# A string
-#extcap.cisco.remoteusername: ericdahlseng
-
-# Path to SSH private key
-# A string
-#extcap.cisco.sshkey: 
-
-# Remote interface
-# A string
-#extcap.cisco.remoteinterface: 
-
-# Remote capture filter
-# A string
-#extcap.cisco.remotefilter: deny tcp host fe80::aede:48ff:fe00:1122 any eq 22, deny tcp any eq 22 host fe80::aede:48ff:fe00:1122, deny tcp host fe80::b4ee:5478:2d00:dcad any eq 22, deny tcp any eq 22 host fe80::b4ee:5478:2d00:dcad, deny tcp host fe80::8c6:ea82:36d8:3261 any eq 22, deny tcp any eq 22 host fe80::8c6:ea82:36d8:3261, deny tcp host fe80::d44c:caff:fe26:9ba0 any eq 22, deny tcp any eq 22 host fe80::d44c:caff:fe26:9ba0, deny tcp host 192.168.10.242 any eq 22, deny tcp any eq 22 host 192.168.10.242, deny tcp host fe80::412:a040:aa67:8bf1 any eq 22, deny tcp any eq 22 host fe80::412:a040:aa67:8bf1, deny tcp host fe80::1 any eq 22, deny tcp any eq 22 host fe80::1, permit ip any any
-
-# Packets to capture
-# A string
-#extcap.cisco.remotecount: 
+#extcap.udpdump.debugfile: 
 
 ####### Name Resolution ########
 
@@ -462,11 +514,11 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 
 # Resolve TCP/UDP ports into service names
 # TRUE or FALSE (case-insensitive)
-#nameres.transport_name: FALSE
+nameres.transport_name: TRUE
 
 # Resolve IPv4, IPv6, and IPX addresses into host names. The next set of check boxes determines how name resolution should be performed. If no other options are checked name resolution is made from Wireshark's host file, capture file name resolution blocks and DNS packets in the capture.
 # TRUE or FALSE (case-insensitive)
-#nameres.network_name: FALSE
+nameres.network_name: TRUE
 
 # Whether address/name pairs found in captured DNS packets should be used by Wireshark for name resolution.
 # TRUE or FALSE (case-insensitive)
@@ -533,6 +585,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Look for dissectors that left some bytes undecoded.
 # TRUE or FALSE (case-insensitive)
 #protocols.enable_incomplete_dissectors_check: FALSE
+
+# Protocols may use things like VLAN ID or interface ID to narrow the potential for duplicate conversations.Currently only ICMP and ICMPv6 use this preference to add VLAN ID to conversation tracking
+# TRUE or FALSE (case-insensitive)
+#protocols.strict_conversation_tracking_heuristics: FALSE
 
 # Use a registered heuristic sub-dissector to decode the data payload
 # TRUE or FALSE (case-insensitive)
@@ -718,6 +774,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #6lowpan.rfc4944_short_address_format: FALSE
 
+# Linux kernels before version 4.12 does toggle the Universal/Local bit.
+# TRUE or FALSE (case-insensitive)
+#6lowpan.iid_has_universal_local_bit: FALSE
+
 # IPv6 prefix to use for stateful address decompression.
 # A string
 #6lowpan.context0: 
@@ -883,9 +943,13 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # A decimal number
 #amqp.ssl.port: 5671
 
-# The dynamic payload type which will be interpreted as AMR; The value must be greater than 95
-# A decimal number
-#amr.dynamic.payload.type: 0
+# The dynamic payload types which will be interpreted as AMR(default 0)
+# A string denoting an positive integer range (e.g., "1-20,30-40")
+#amr.dynamic.payload.type: 
+
+# The dynamic payload types which will be interpreted as AMR-WB(default 0)
+# A string denoting an positive integer range (e.g., "1-20,30-40")
+#amr.wb.dynamic.payload.type: 
 
 # Type of AMR encoding of the payload
 # One of: RFC 3267 octet aligned, RFC 3267 BW-efficient, AMR IF1, AMR IF2
@@ -953,7 +1017,7 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # (case-insensitive).
 #asterix.i001_version: Version 1.2
 
-# Select the CAT001 version
+# Select the CAT002 version
 # One of: Version 1.0
 # (case-insensitive).
 #asterix.i002_version: Version 1.0
@@ -1086,50 +1150,6 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #bittorrent.decode_client: FALSE
 
-# Whether the BMP dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
-# TRUE or FALSE (case-insensitive)
-#bmp.desegment: TRUE
-
-# Novell Servers option 85 can be configured as a string instead of address
-# TRUE or FALSE (case-insensitive)
-#bootp.novellserverstring: FALSE
-
-# The PacketCable CCC protocol version
-# One of: PKT-SP-PROV-I05-021127, IETF Draft 5, RFC 3495
-# (case-insensitive).
-#bootp.pkt.ccc.protocol_version: RFC 3495
-
-# Option Number for PacketCable CableLabs Client Configuration
-# A decimal number
-#bootp.pkt.ccc.option: 122
-
-# Endianness applied to UUID fields
-# One of: Little Endian, Big Endian
-# (case-insensitive).
-#bootp.uuid.endian: Little Endian
-
-# For the sake of sub-dissectors registering to accept data from the BSSAP/BSAP dissector, this defines whether it is identified as BSSAP or BSAP.
-# One of: BSSAP, BSAP
-# (case-insensitive).
-#bssap.bsap_or_bssap: BSSAP
-
-# GSM-A is the interface between the BSC and the MSC. Lb is the interface between the BSC and the SMLC.
-# One of: GSM A, Lb
-# (case-insensitive).
-#bssap.gsm_or_lb_interface: GSM A
-
-# Set Subsystem number used for BSSAP/BSSAP+
-# A decimal number
-#bssap.ssn: 98
-
-# Decode NRI (for use with SGSN in Pool)
-# TRUE or FALSE (case-insensitive)
-#bssgp.decode_nri: FALSE
-
-# NRI length, in bits
-# A decimal number
-#bssgp.nri_length: 4
-
 # Force decoding stream as A2DP with Content Protection SCMS-T 
 # TRUE or FALSE (case-insensitive)
 #bta2dp.a2dp.content_protection.scms_t: FALSE
@@ -1195,6 +1215,54 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # One of: H263, MPEG4 VSP
 # (case-insensitive).
 #btvdp.vdp.codec: H263
+
+# Whether the ACL dissector should reassemble fragmented PDUs
+# TRUE or FALSE (case-insensitive)
+#bthci_acl.hci_acl_reassembly: TRUE
+
+# Whether the BMP dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
+# TRUE or FALSE (case-insensitive)
+#bmp.desegment: TRUE
+
+# Novell Servers option 85 can be configured as a string instead of address
+# TRUE or FALSE (case-insensitive)
+#bootp.novellserverstring: FALSE
+
+# The PacketCable CCC protocol version
+# One of: PKT-SP-PROV-I05-021127, IETF Draft 5, RFC 3495
+# (case-insensitive).
+#bootp.pkt.ccc.protocol_version: RFC 3495
+
+# Option Number for PacketCable CableLabs Client Configuration
+# A decimal number
+#bootp.pkt.ccc.option: 122
+
+# Endianness applied to UUID fields
+# One of: Little Endian, Big Endian
+# (case-insensitive).
+#bootp.uuid.endian: Little Endian
+
+# For the sake of sub-dissectors registering to accept data from the BSSAP/BSAP dissector, this defines whether it is identified as BSSAP or BSAP.
+# One of: BSSAP, BSAP
+# (case-insensitive).
+#bssap.bsap_or_bssap: BSSAP
+
+# GSM-A is the interface between the BSC and the MSC. Lb is the interface between the BSC and the SMLC.
+# One of: GSM A, Lb
+# (case-insensitive).
+#bssap.gsm_or_lb_interface: GSM A
+
+# Set Subsystem number used for BSSAP/BSSAP+
+# A decimal number
+#bssap.ssn: 98
+
+# Decode NRI (for use with SGSN in Pool)
+# TRUE or FALSE (case-insensitive)
+#bssgp.decode_nri: FALSE
+
+# NRI length, in bits
+# A decimal number
+#bssgp.nri_length: 4
 
 # Dissect next layer
 # TRUE or FALSE (case-insensitive)
@@ -1269,6 +1337,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Set the number of fields allowed in a template.  Use 0 (zero) for unlimited.   (default: 60)
 # A decimal number
 #cflow.max_template_fields: 60
+
+# Whether the Netflow/Ipfix dissector should reassemble messages spanning multiple TCP segments.  To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
+# TRUE or FALSE (case-insensitive)
+#cflow.desegment: TRUE
 
 # The type of CHDLC frame checksum (none, 16-bit, 32-bit)
 # One of: None, 16-Bit, 32-Bit
@@ -1373,6 +1445,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Show not dissected data on new Packet Bytes pane
 # TRUE or FALSE (case-insensitive)
 #data.datapref.newpane: FALSE
+
+# Try to uncompress zlib compressed data and show as uncompressed if successful
+# TRUE or FALSE (case-insensitive)
+#data.uncompress_data: FALSE
 
 # Show data as text in the Packet Details pane
 # TRUE or FALSE (case-insensitive)
@@ -1531,6 +1607,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #dns.desegment_dns_messages: TRUE
 
+# Number of seconds allowed between DNS requests with the same transaction ID to consider it a retransmission. Otherwise its considered a new request.
+# A decimal number
+#dns.retransmission_timer: 5
+
 # Whether or not to validate the Header Check Sequence
 # TRUE or FALSE (case-insensitive)
 #docsis.check_fcs: TRUE
@@ -1680,10 +1760,6 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #gsm_abis_pgsl.ir: FALSE
 
-# When set, dissector will FORCE to decode directly Ethernet FrameSome vendor use fake ERSPAN frame (with not ERSPAN Header)
-# TRUE or FALSE (case-insensitive)
-#erspan.fake_erspan: FALSE
-
 # This is done only if the Decoding is not SET or the packet does not belong to a SA. Assumes a 12 byte auth (HMAC-SHA1-96/HMAC-MD5-96/AES-XCBC-MAC-96) and attempts decode based on the ethertype 13 bytes from packet end
 # TRUE or FALSE (case-insensitive)
 #esp.enable_null_encryption_decode_heuristic: FALSE
@@ -1728,6 +1804,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #eth.interpret_as_fw1_monitor: FALSE
 
+# When capturing on a Cisco FEX some frames start with an extra destination mac
+# TRUE or FALSE (case-insensitive)
+#eth.deduplicate_dmac: FALSE
+
 # Set the condition that must be true for the CCSDS dissector to be called
 # TRUE or FALSE (case-insensitive)
 #eth.ccsds_heuristic_length: FALSE
@@ -1755,6 +1835,31 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Controls the display of the command being run on the server by this session in the info column.  This is only displayed if the packet containing it was seen during this capture session.
 # TRUE or FALSE (case-insensitive)
 #exec.info_show_command: FALSE
+
+# Disable this if you do not want this dissector to populate well-known fields in other dissectors (i.e. ip.addr, ipv6.addr, tcp.port and udp.port).  Enabling this will allow filters that reference those fields to also find data in the trailers but will reduce performance.  After disabling, you should restart Wireshark to get perfomance back.
+# TRUE or FALSE (case-insensitive)
+#f5ethtrailer.pop_other_fields: FALSE
+
+# Enabling this will perform analysis of the trailer data.  It will enable taps on other protocols and slow down Wireshark.
+# TRUE or FALSE (case-insensitive)
+#f5ethtrailer.perform_analysis: TRUE
+
+# In/out only removes slot/tmm information.  Brief shortens the string to >S/T (for in) or <S/T (for out).  See "Brief in/out characters" below.
+# One of: None, Full, In/out only, Brief, Brief in/out only
+# (case-insensitive).
+#f5ethtrailer.info_type: Full
+
+# A string specifying the characters to use to represent "in" and "out" in the brief summary.  The default is "><" ('>' for in and '<' for out).  If this is not set or is less than two characters, the default is used.  If it is longer than two characters, the extra characters are ignored.
+# A string
+#f5ethtrailer.brief_inout_chars: 
+
+# If the platform in the F5 FILEINFO packet matches the provided regex, slot information will be displayed in the info column; otherwise, it will not.  A reasonable value is "^(A.*|Z101)$".  If the regex is empty or there is no platform information in the capture, slot information is always displayed.
+# A string
+#f5ethtrailer.slots_regex: 
+
+# If present, include the RST cause text from the trailer in the "info" column of the packet list pane.
+# TRUE or FALSE (case-insensitive)
+#f5ethtrailer.rstcause_in_info: TRUE
 
 # If enabled, reassembly of multi-frame sequences is done
 # TRUE or FALSE (case-insensitive)
@@ -1823,6 +1928,14 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # For each PCH data frame, Try to show the paging indications bitmap found in the previous frame
 # TRUE or FALSE (case-insensitive)
 #fp.track_paging_indications: TRUE
+
+# Whether the UID value should be appended in the protocol tree
+# TRUE or FALSE (case-insensitive)
+#fp_mux.uid_in_tree: TRUE
+
+# Whether to try heuristic FP dissectors for the muxed payloads
+# TRUE or FALSE (case-insensitive)
+#fp_mux.call_heur_fp: TRUE
 
 # Encapsulation
 # One of: FRF 3.2/Cisco HDLC, GPRS Network Service, Raw Ethernet
@@ -1912,6 +2025,14 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Whether to autodetect the cipher bit (because it might be set on unciphered data)
 # TRUE or FALSE (case-insensitive)
 #llcgprs.autodetect_cipher_bit: FALSE
+
+# Help for debug...
+# TRUE or FALSE (case-insensitive)
+#gquic.debug.quic: FALSE
+
+# Normally application/grpc message is protobuf, but sometime the true message is json. If this option in on, we always check whether the message is JSON (body starts with '{' and ends with '}') regardless of grpc_message_type_subdissector_table settings (which dissect grpc message according to content-type).
+# TRUE or FALSE (case-insensitive)
+#grpc.detect_json_automaticlly: TRUE
 
 # Whether the Gryphon dissector should desegment all messages spanning multiple TCP segments
 # TRUE or FALSE (case-insensitive)
@@ -2057,10 +2178,6 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #hzlcst.desegment: TRUE
 
-# Whether the ACL dissector should reassemble fragmented PDUs
-# TRUE or FALSE (case-insensitive)
-#bthci_acl.hci_acl_reassembly: TRUE
-
 # The ethernet type used for L2 communications
 # A decimal number
 #hcrt.dissector_ethertype: 61522
@@ -2158,6 +2275,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # (case-insensitive).
 #wlan.ignore_wep: No
 
+# Some Key MIC lengths are greater than 16 bytes, so set the length you require
+# A decimal number
+#wlan.wpa_key_mic_len: 0
+
 # Enable WEP and WPA/WPA2 decryption
 # TRUE or FALSE (case-insensitive)
 #wlan.enable_decryption: TRUE
@@ -2253,7 +2374,7 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #ip.tso_support: TRUE
 
-# Whether to look up IP addresses in each GeoIP database we have loaded
+# Whether to look up IP addresses in each MaxMind database we have loaded
 # TRUE or FALSE (case-insensitive)
 #ip.use_geoip: TRUE
 
@@ -2273,7 +2394,7 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #ipv6.summary_in_tree: TRUE
 
-# Whether to look up IPv6 addresses in each GeoIP database we have loaded
+# Whether to look up IPv6 addresses in each MaxMind database we have loaded
 # TRUE or FALSE (case-insensitive)
 #ipv6.use_geoip: TRUE
 
@@ -2292,6 +2413,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # If enabled the Length field in octets will be hidden
 # TRUE or FALSE (case-insensitive)
 #ipv6.exthdr_hide_len_oct_field: FALSE
+
+# Whether to correct for TSO-enabled (TCP segmentation offload) hardware captures, such as spoofing the IPv6 packet length
+# TRUE or FALSE (case-insensitive)
+#ipv6.tso_support: FALSE
 
 # The iSCSI protocol version
 # One of: Draft 08, Draft 09, Draft 11, Draft 12, Draft 13
@@ -2437,6 +2562,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # (case-insensitive).
 #iso8583.binencode: Bin data represented as Hex Ascii characters
 
+# File containing a translation from object ID to string
+# A path to a file
+#isobus.vt.object_ids: 
+
 # Note national variants may not be fully supported
 # One of: ITU Standard, French National Standard, Israeli National Standard, Russian National Standard, Japan National Standard, Japan National Standard (TTC)
 # (case-insensitive).
@@ -2481,6 +2610,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Whether the trailer summary line should be shown in the protocol tree
 # TRUE or FALSE (case-insensitive)
 #ixiatrailer.summary_in_tree: TRUE
+
+# Display JSON like in browsers devtool
+# TRUE or FALSE (case-insensitive)
+#json.compact_form: FALSE
 
 # Enable to have correctly typed MIME media dissected as JXTA Messages.
 # TRUE or FALSE (case-insensitive)
@@ -2678,6 +2811,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Add as a generated field the middle of the range indicated by the BSR index
 # TRUE or FALSE (case-insensitive)
 #mac-lte.show_bsr_median: FALSE
+
+# Attempt to decode BCCH, PCCH and CCCH data using NR RRC dissector
+# TRUE or FALSE (case-insensitive)
+#mac-nr.attempt_rrc_decode: TRUE
 
 # The name of the file containing the mate module's configuration
 # A path to a file
@@ -3194,6 +3331,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #opensafety.classify_transport: TRUE
 
+# Port used by the openSAFETY over UDP data transport
+# A decimal number
+#opensafety_udp.network_udp_port: 9877
+
 # If tls-auth detection fails, you can choose to override detection and set tls-auth yourself
 # TRUE or FALSE (case-insensitive)
 #openvpn.tls_auth_detection_override: FALSE
@@ -3397,6 +3538,18 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #pppoed.show_tags_and_lengths: FALSE
 
+# Try to dissect all length-delimited field as string.
+# TRUE or FALSE (case-insensitive)
+#protobuf.try_dissect_all_length_delimited_field_as_string: FALSE
+
+# Try to dissect length-delimited field as repeated.
+# TRUE or FALSE (case-insensitive)
+#protobuf.try_dissect_length_delimited_field_as_repeated: FALSE
+
+# Try to show all possible field types for each field according to wire type.
+# TRUE or FALSE (case-insensitive)
+#protobuf.show_all_possible_field_types: FALSE
+
 # Properly translates vendor specific opcodes
 # One of: Unknown vendor, Eastman Kodak, Canon, Nikon, Casio EX-F1, Microsoft / MTP, Olympus E series
 # (case-insensitive).
@@ -3430,10 +3583,6 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Set the UDP base port for the Quake III Arena Master Server
 # A decimal number
 #quake3.udp.master_port: 27950
-
-# Help for debug...
-# TRUE or FALSE (case-insensitive)
-#quic.debug.quic: FALSE
 
 # Shared secret used to decode User Passwords and validate Response Authenticators
 # A string
@@ -3487,13 +3636,13 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #rlc.header_only_mode: FALSE
 
-# When enabled, rlc will assume all data is ciphered
+# When enabled, RLC will ignore sequence numbers reported in 'Security Mode Command'/'Security Mode Complete' (RRC) messages when checking if frames are ciphered
+# TRUE or FALSE (case-insensitive)
+#rlc.ignore_rrc_cipher_indication: FALSE
+
+# When enabled, RLC will assume all payloads in RLC frames are ciphered
 # TRUE or FALSE (case-insensitive)
 #rlc.ciphered_data: FALSE
-
-# When enabled, rlc will try to decipher data. (Experimental)
-# TRUE or FALSE (case-insensitive)
-#rlc.try_decipher: FALSE
 
 # LI size in bits, either 7 or 15 bit
 # One of: 7 bits, 15 bits, Let upper layers decide
@@ -3538,6 +3687,14 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # When enabled, attempts to re-assemble upper-layer SDUs that are split over more than one RLC PDU.  Note: does not currently support out-of-order or re-segmentation. N.B. sequence analysis must also be turned on in order for reassembly to work
 # TRUE or FALSE (case-insensitive)
 #rlc-lte.reassembly: TRUE
+
+# Call RRC dissector for CCCH PDUs
+# TRUE or FALSE (case-insensitive)
+#rlc-nr.call_rrc_for_ccch: TRUE
+
+# When enabled, if data is not present, don't report as an error, but instead add expert info to indicate that headers were omitted
+# TRUE or FALSE (case-insensitive)
+#rlc-nr.header_only_mode: FALSE
 
 # Whether the RPC dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
 # TRUE or FALSE (case-insensitive)
@@ -3590,6 +3747,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Use ipaccess nanoBTS specific definitions for RSL
 # TRUE or FALSE (case-insensitive)
 #gsm_abis_rsl.use_ipaccess_rsl: FALSE
+
+# The Physical Context Information field is not specified This information should be not be analysed by BSC, but merely forwarded from one TRX/channel to another.
+# TRUE or FALSE (case-insensitive)
+#gsm_abis_rsl.dissect_phy_ctx_inf: TRUE
 
 # Specifies whether Wireshark should decode and display sub-messages within BUNDLE messages
 # TRUE or FALSE (case-insensitive)
@@ -3926,6 +4087,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #sml.crc: FALSE
 
+# Whether the SMP dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
+# TRUE or FALSE (case-insensitive)
+#smp.desegment: TRUE
+
 # Whether the SMPP dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
 # TRUE or FALSE (case-insensitive)
 #smpp.reassemble_smpp_over_tcp: TRUE
@@ -3982,6 +4147,14 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Attempt to show alert in reassembled frame where possible
 # TRUE or FALSE (case-insensitive)
 #snort.show_alert_in_reassembled_frame: FALSE
+
+# Show unidentified fields ("padding") in packet dissections
+# TRUE or FALSE (case-insensitive)
+#solaredge.unknown: TRUE
+
+# Inverter system encryption key
+# A string
+#solaredge.system_encryption_key: 
 
 # Whether the SoulSeek dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
 # TRUE or FALSE (case-insensitive)
@@ -4082,6 +4255,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Whether the StarTeam dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
 # TRUE or FALSE (case-insensitive)
 #starteam.desegment: TRUE
+
+#  Steam IHS Discovery UDP port if other than the default
+# A decimal number
+#steam_ihs_discovery.udp.port: 27036
 
 # Whether the BPDU dissector should use 802.1t System ID Extensions when dissecting the Bridge Identifier
 # TRUE or FALSE (case-insensitive)
@@ -4192,7 +4369,7 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 
 # Calculate timestamps relative to the first frame and the previous frame in the tcp conversation
 # TRUE or FALSE (case-insensitive)
-#tcp.calculate_timestamps: FALSE
+#tcp.calculate_timestamps: TRUE
 
 # Try to decode a packet using an heuristic sub-dissector before using a sub-dissector registered to a specific port
 # TRUE or FALSE (case-insensitive)
@@ -4243,7 +4420,7 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 #tds.defragment: TRUE
 
 # Hint as to version of TDS protocol being decoded
-# One of: Not Specified, TDS 4, TDS 5, TDS 7.0, TDS 7.1, TDS 7.2, TDS 7.3, TDS 7.3A, TDS 7.3B, TDS 7.4
+# One of: Not Specified, TDS 4.x, TDS 5.0, TDS 7.0, TDS 7.1, TDS 7.2, TDS 7.3, TDS 7.3A, TDS 7.3B, TDS 7.4
 # (case-insensitive).
 #tds.protocol_type: Not Specified
 
@@ -4256,10 +4433,6 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #tetra.include_carrier_number: TRUE
 
-# Try to decode CoAP for Thread
-# TRUE or FALSE (case-insensitive)
-#thread.thr_coap_decode: FALSE
-
 # 32-bit sequence counter for hash
 # A string
 #thread.thr_seq_ctr: 
@@ -4271,6 +4444,34 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Set if the Thread sequence counter should be automatically acquired from Key ID mode 2 MLE messages.
 # TRUE or FALSE (case-insensitive)
 #thread.thr_auto_acq_thr_seq_ctr: TRUE
+
+# Thrift TLS Port
+# A decimal number
+#thrift.tls.port: 0
+
+# Try the default RSA key in use by nearly all Open Tibia servers
+# TRUE or FALSE (case-insensitive)
+#tibia.try_otserv_key: TRUE
+
+# Shows active character for every packet
+# TRUE or FALSE (case-insensitive)
+#tibia.show_char_name: TRUE
+
+# Shows account name/password or session key for every packet
+# TRUE or FALSE (case-insensitive)
+#tibia.show_acc_info: TRUE
+
+# Shows which XTEA key was applied for a packet
+# TRUE or FALSE (case-insensitive)
+#tibia.show_xtea_key: FALSE
+
+# Only decrypt packets and dissect login packets. Pass game commands to the data dissector
+# TRUE or FALSE (case-insensitive)
+#tibia.dissect_game_commands: FALSE
+
+# Whether the Tibia dissector should reassemble packets spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
+# TRUE or FALSE (case-insensitive)
+#tibia.reassemble_tcp_segments: TRUE
 
 # Time display type
 # One of: UTC, Local
@@ -4366,6 +4567,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #transum.rte_on_last_rsp: FALSE
 
+# Set this only to troubleshoot problems
+# TRUE or FALSE (case-insensitive)
+#transum.debug_enabled: FALSE
+
 # Critical Traffic Mask (base hex)
 # A hexadecimal number
 #tte.ct_mask_value: 0
@@ -4377,10 +4582,6 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # Setup RTP/RTCP conversations when parsing Start RTP messages
 # TRUE or FALSE (case-insensitive)
 #ua.setup_conversations: TRUE
-
-# UA SIP Protocol enabled
-# TRUE or FALSE (case-insensitive)
-#uasip.aplication_octet_stream: FALSE
 
 # NOE SIP Protocol
 # TRUE or FALSE (case-insensitive)
@@ -4434,10 +4635,9 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # TRUE or FALSE (case-insensitive)
 #usb.try_heuristics: TRUE
 
-# How commands from the PC to the reader are interpreted
-# One of: Data, Generic ISO 7816, GSM SIM, NXP PN532, ACR122 PN532
-# (case-insensitive).
-#usbccid.prtype: Data
+# Activate workaround for weird Ettus UHD header offset on data packets
+# TRUE or FALSE (case-insensitive)
+#vrt.ettus_uhd_header_format: FALSE
 
 # Whether the vlan summary line should be shown in the protocol tree
 # TRUE or FALSE (case-insensitive)
@@ -4481,6 +4681,10 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # One of: No subdissection, Line based text, As json, As SIP
 # (case-insensitive).
 #websocket.text_type: No subdissection
+
+# No description
+# TRUE or FALSE (case-insensitive)
+#websocket.decompress: TRUE
 
 # Set the maximum Basic CID used in the Wimax decoder (if other than the default of 320).  Note: The maximum Primary CID is double the maximum Basic CID.
 # A decimal number
@@ -4570,6 +4774,11 @@ capture.devices_pmode: en0(1),p2p0(1),awdl0(1),bridge0(1),utun0(1),en1(1),utun1(
 # One of: No Security, No Encryption, 32-bit Integrity Protection, No Encryption, 64-bit Integrity Protection, No Encryption, 128-bit Integrity Protection, AES-128 Encryption, No Integrity Protection, AES-128 Encryption, 32-bit Integrity Protection, AES-128 Encryption, 64-bit Integrity Protection, AES-128 Encryption, 128-bit Integrity Protection
 # (case-insensitive).
 #zbee_nwk.seclevel: AES-128 Encryption, 32-bit Integrity Protection
+
+# Specifies the ZigBee Smart Energy version used when dissecting ZigBee APS messages within the Smart Energy Profile
+# One of: SE 1.1b, SE 1.2, SE 1.2a, SE 1.2b, SE 1.4
+# (case-insensitive).
+#zbee_aps.zbeeseversion: SE 1.4
 
 ####### Statistics ########
 
