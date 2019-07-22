@@ -49,7 +49,7 @@ shouldAddFile() {
 		if [ "${overwrite_all}" == "false" ] && [ "${backup_all}" == "false" ] && [ "${skip_all}" == "false" ]; then
 			local currentSrc="$(readlink ${dst})"
 
-			if [ "${currentSrc}" == "${src}" ]; then
+			if [ "${currentSrc}" == "${src}" ] || [[ -d "${dst}" && "${skipIfDirectory}" == "true" ]]; then
 				skip=true;
 			else
 				user "File already exists: ${dst} ($(basename "${src}")), what do you want to do?\n\
@@ -113,7 +113,7 @@ linkFile() {
 makeSymlinkParentDirectory() {
 	local overwrite_all=false backup_all=false skip_all=false
 
-	if shouldAddFile "${1}" "${2}"; then
+	if skipIfDirectory="true" shouldAddFile "${1}" "${2}"; then
 		mkdir -p "${2}"
 		success "Created directory ${2}"
 	fi
