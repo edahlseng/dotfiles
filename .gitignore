@@ -10,3 +10,4 @@ taskWorkProjectUrgency
 config.symlink/gcloud
 config.symlink/configstore
 config.symlink/direnv/allow/*
+config.symlink/karabiner/automatic_backups
