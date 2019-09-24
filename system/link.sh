@@ -170,6 +170,7 @@ installDotfilesDirectory() {
 installLaunchAgents() {
 	echo ""
 	info 'Installing Launch Agents'
+	mkdir -p "${HOME}/Library/LaunchAgents"
 
 	local overwrite_all=false backup_all=false skip_all=false
 
