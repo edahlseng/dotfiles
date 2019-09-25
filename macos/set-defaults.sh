@@ -10,8 +10,9 @@
 # Use AirDrop over every interface. srsly this should be a default
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
 
-# Set the Finder prefs for showing hidden files
-defaults write com.apple.finder AppleShowAllFiles YES
+# Finder
+defaults write com.apple.finder AppleShowAllFiles YES # Show hidden files
+defaults write com.apple.finder ShowStatusBar 1
 
 # Hide Safari's bookmark bar
 defaults write com.apple.Safari ShowFavoritesBar -bool false
