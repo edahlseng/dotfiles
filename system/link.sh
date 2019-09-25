@@ -134,8 +134,7 @@ installDotfilesFromSymlinkParent() {
 	# Get array of files regardless of special characters (like spaces) in the filenames
 	# Use file descriptor 3 for read here, so that further reads inside of the loop work
 	while IFS='' read -r -u 3 -d $'\0'; do
-		echo "${REPLY}"
-		# installDotfilesFromSymlinkParent "${REPLY}" "${destinationDirectory}/$(basename "${REPLY%.*}")"
+		installDotfilesFromSymlinkParent "${REPLY}" "${destinationDirectory}/$(basename "${REPLY%.*}")"
 	done 3< <(find -H "${sourceDirectory}" -maxdepth 1 -name '*.symlinkParent' -not -path '*.git*' -not -path "${sourceDirectory}" -print0)
 }
 
