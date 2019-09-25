@@ -24,6 +24,22 @@ defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.Web
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Set up Terminal
-defaults write com.apple.Terminal "Default Window Settings" "Man Page"
-defaults write com.apple.Terminal "Startup Window Settings" "Man Page"
-echo "Terminal must be restarted for setting changes to be applied"
+terminalUpdated="false"
+if [[ $(defaults read com.apple.Terminal "Default Window Settings") != "Man Page" ]]; then
+	defaults write com.apple.Terminal "Default Window Settings" "Man Page"
+	terminalUpdated="true"
+fi
+if [[ $(defaults read com.apple.Terminal "Startup Window Settings") != "Man Page" ]]; then
+	defaults write com.apple.Terminal "Startup Window Settings" "Man Page"
+	terminalUpdated="true"
+fi
+
+if [[ "${terminalUpdated}" == "true" ]]; then
+	echo "Terminal must be restarted for setting changes to be applied"
+fi
+
+# Set up global domain
+defaults write -globalDomain com.apple.mouse.scaling 3
+defaults write -globalDomain com.apple.scrollwheel.scaling 1
+defaults write -globalDomain com.apple.trackpad.forceClick 1
+defaults write -globalDomain com.apple.trackpad.scaling 2.5
