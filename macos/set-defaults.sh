@@ -44,3 +44,6 @@ defaults write -globalDomain com.apple.mouse.scaling 3
 defaults write -globalDomain com.apple.scrollwheel.scaling 1
 defaults write -globalDomain com.apple.trackpad.forceClick 1
 defaults write -globalDomain com.apple.trackpad.scaling 2.5
+
+# Set search engine
+defaults write -globalDomain NSWebServicesProviderWebSearch -dict NSDefaultDisplayName DuckDuckGo NSProviderIdentifier "com.duckduckgo"
