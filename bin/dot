@@ -5,9 +5,9 @@
 set -e
 
 parentDirectory="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
-dotfilesDirectory="$(cd "$( dirname "$parentDirectory" )" && pwd -P)"
+dotfilesDirectory="$(cd "$( dirname "${parentDirectory}" )" && pwd -P)"
 
-source "$dotfilesDirectory/system/logging.sh"
+source "${dotfilesDirectory}/system/logging.sh"
 
 displayUsageAndExit() {
 	echo "dot -- dotfiles management"
@@ -44,7 +44,7 @@ while test $# -gt 0; do
 			defaults="true"
 			;;
 		"-e"|"--edit")
-			exec "$EDITOR" "$dotfilesDirectory"
+			exec "${EDITOR}" "${dotfilesDirectory}"
 			exit
 			;;
 		"-g"|"--gui-sudo-askpass")
@@ -60,7 +60,7 @@ while test $# -gt 0; do
 			link="true"
 			;;
 		*)
-			echo "Invalid option: $1"
+			echo "Invalid option: ${1}"
 			displayUsageAndExit
 			;;
 	esac
@@ -80,23 +80,23 @@ atExit() {
 # Set up GUI password dialog for sudo, if specified
 # ------------------------------------------------------------------------------
 
-if [ "$guiSudoAskpass" == "true" ]; then
+if [ "${guiSudoAskpass}" == "true" ]; then
 	sudoGuiAskpassScript="$(mktemp)"
 
 	deleteSudoAskpassScript() {
-		/bin/rm -f "$sudoGuiAskpassScript"
+		/bin/rm -f "${sudoGuiAskpassScript}"
 	}
 
 	atExit deleteSudoAskpassScript
 
-	cat<<-'EOF' > "$sudoGuiAskpassScript"
+	cat<<-'EOF' > "${sudoGuiAskpassScript}"
 	#!/bin/bash
 	password="$(osascript -e 'Tell application "System Events" to display dialog "dotfiles is requesting your administrator password:" default answer "" with hidden answer' -e 'text returned of result' 2> /dev/null)"
 	echo "$password"
 	EOF
 
-	chmod +x "$sudoGuiAskpassScript"
-	export SUDO_ASKPASS="$sudoGuiAskpassScript"
+	chmod +x "${sudoGuiAskpassScript}"
+	export SUDO_ASKPASS="${sudoGuiAskpassScript}"
 fi
 
 # ------------------------------------------------------------------------------
@@ -104,21 +104,21 @@ fi
 # ------------------------------------------------------------------------------
 
 if [ ! -e ~/.dotfiles ]; then
-	ln -s "$dotfilesDirectory" ~/.dotfiles
+	ln -s "${dotfilesDirectory}" ~/.dotfiles
 fi
 
 # ------------------------------------------------------------------------------
 # Set defaults
 # ------------------------------------------------------------------------------
 
-if [ "$defaults" == "true" ]; then
+if [ "${defaults}" == "true" ]; then
 	echo ""
 	echo "Setting defaults..."
 
 	# Set macOS defaults
-	"$dotfilesDirectory"/macos/set-defaults.sh
+	"${dotfilesDirectory}"/macos/set-defaults.sh
 
-	if [ "$(basename "$SHELL")" != "zsh" ]; then
+	if [ "$(basename "${SHELL}")" != "zsh" ]; then
 		echo "Setting Zsh as the default shell"
 		if chsh -s $(which zsh); then
 			success "Zsh set as the default"
@@ -135,20 +135,20 @@ fi
 # Link dotfiles
 # ------------------------------------------------------------------------------
 
-if [ "$link" == "true" ]; then
+if [ "${link}" == "true" ]; then
 	echo ""
 	echo "Linking dotfiles..."
-	"$dotfilesDirectory"/system/link.sh
+	"${dotfilesDirectory}"/system/link.sh
 fi
 
 # ------------------------------------------------------------------------------
 # Install dependencies
 # ------------------------------------------------------------------------------
 
-if [ "$install" == "true" ]; then
+if [ "${install}" == "true" ]; then
 	echo ""
 	echo "Installing dependencies..."
-	"$dotfilesDirectory"/system/install.sh
+	"${dotfilesDirectory}"/system/install.sh
 fi
 
 # ------------------------------------------------------------------------------
@@ -156,4 +156,4 @@ fi
 # ------------------------------------------------------------------------------
 
 # TODO: check if Atom has just been freshly installed, and install packages in that case, instead
-"$dotfilesDirectory"/bin/atom-package-backup
+"${dotfilesDirectory}"/bin/atom-package-backup
