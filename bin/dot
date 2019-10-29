@@ -36,19 +36,19 @@ else
 	link="false"
 	install="false"
 fi
-guiSudoAskpass="false"
+guiSudoAskpass="true"
 
 while test $# -gt 0; do
 	case "$1" in
+		"-c"|"--command-line-sudo-askpass")
+			guiSudoAskpass="false"
+			;;
 		"-d"|"--defaults")
 			defaults="true"
 			;;
 		"-e"|"--edit")
 			exec "${EDITOR}" "${dotfilesDirectory}"
 			exit
-			;;
-		"-g"|"--gui-sudo-askpass")
-			guiSudoAskpass="true"
 			;;
 		"-h"|"--help")
 			displayUsageAndExit
