@@ -17,6 +17,9 @@
   "autocomplete-flow": {}
   "autocomplete-python":
     useKite: false
+  "clang-format":
+    formatCOnSave: true
+    formatCPlusPlusOnSave: true
   core:
     disabledPackages: [
       "kak-mode"
