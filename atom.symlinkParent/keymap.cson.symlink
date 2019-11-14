@@ -28,3 +28,10 @@
     ':': 'go-to-line:toggle'
 'atom-text-editor':
     'cmd-k l': 'pane:split-right-and-move-active-item'
+'.tree-view':
+    'z t': 'custom:move-selected-entry-to-top'
+    'z enter': 'custom:move-selected-entry-to-top'
+    'z z': 'custom:move-selected-entry-to-center'
+    'z .': 'custom:move-selected-entry-to-center'
+    'z b': 'custom:move-selected-entry-to-bottom'
+    'z -': 'custom:move-selected-entry-to-bottom'

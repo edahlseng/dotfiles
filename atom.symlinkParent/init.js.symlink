@@ -27,3 +27,23 @@ consumeVimModePlusService(service => {
   DeleteWithBlackholeRegister.commandPrefix = "vim-mode-plus-user"
   DeleteWithBlackholeRegister.registerCommand()
 })
+
+const nth = n => x => x instanceof Array ? x[n] : undefined;
+const prop = p => x => typeof x === 'object' ? x[p] : undefined;
+const find = f => x => x.find(f);
+const maybe = f => x => x === null || x === undefined ? x : f(x);
+
+const getTreeView = () => nth(0)(atom.workspace.getLeftDock().getPaneItems().filter(paneItem => paneItem.constructor.name === 'TreeView'));
+const getSelectedEntry = () => prop('lastFocusedEntry')(getTreeView());
+
+atom.commands.add('.tree-view', 'custom:move-selected-entry-to-top', () =>
+    maybe(x => x.scrollIntoView({ block: 'start', inline: 'start' }))(getSelectedEntry())
+)
+
+atom.commands.add('.tree-view', 'custom:move-selected-entry-to-center', () =>
+    maybe(x => x.scrollIntoView({ block: 'center', inline: 'start' }))(getSelectedEntry())
+)
+
+atom.commands.add('.tree-view', 'custom:move-selected-entry-to-bottom', () =>
+    maybe(x => x.scrollIntoView({ block: 'end', inline: 'start' }))(getSelectedEntry())
+)
