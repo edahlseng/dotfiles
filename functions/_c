@@ -1,6 +1,11 @@
 #compdef c
-_files -W "$HOME/Documents" -/
-_files -W "$PROJECTS" -/
-_files -W "$AREAS/Shaper -- Repos" -/
+
+for directory in "${RESOURCES}/Repositories"/*; do
+	_files -W "${directory}" -/
+done
+
+_files -W "${RESOURCES}/Repositories" -/
+_files -W "${PROJECTS}" -/
+_files -W "${HOME}/Documents" -/
 
 # See further documentation in `functions/c`.

@@ -13,10 +13,20 @@
 #
 # ...to quickly jump into holman/boom, for example.
 
-if [ ! -z "$1" ] && [ -s "$AREAS/Shaper -- Repos/$1" ]; then
-  cd "$AREAS/Shaper -- Repos/$1"
-elif [ ! -z "$1" ] && [ -s "$PROJECTS/$1" ]; then
-  cd "$PROJECTS/$1"
-else
-  cd "$HOME/Documents/$1"
+possibleParentDirectories=(
+	"${HOME}/Documents"
+	"${PROJECTS}"
+	"${RESOURCES}/Repositories"
+)
+
+for directory in "${RESOURCES}/Repositories"/*; do
+	possibleParentDirectories+="${directory}"
+done
+
+if [[ ! -z "${1}" ]]; then
+	for possibleParentDirectory in "${possibleParentDirectories[@]}"; do
+		if [[ -s "${possibleParentDirectory}/${1}" ]]; then
+			cd "${possibleParentDirectory}/${1}"
+		fi
+	done
 fi
