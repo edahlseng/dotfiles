@@ -80,6 +80,7 @@
         "*.yaml"
         "*.yml"
       ]
+  "terraform-fmt": {}
   "tree-view": {}
   "vim-mode-plus":
     blackholeRegisteredOperators: [

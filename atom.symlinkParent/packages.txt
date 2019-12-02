@@ -41,6 +41,7 @@ parinfer
 prettier-atom
 teletype
 terminal-plus
+terraform-fmt
 vim-mode-plus
 vim-mode-plus-keymaps-for-surround
 
