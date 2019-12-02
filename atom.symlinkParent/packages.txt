@@ -26,6 +26,7 @@ language-pug
 language-qml
 language-qtpro
 language-swift
+language-terraform
 linter
 linter-clang
 linter-eslint

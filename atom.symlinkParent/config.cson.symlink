@@ -30,6 +30,10 @@
       "one-dark-ui"
       "monokai"
     ]
+    customFileTypes:
+      'source.terraform': [
+        'tf'
+      ]
   editor:
     fontFamily: "Menlo Regular"
     fontSize: 11
