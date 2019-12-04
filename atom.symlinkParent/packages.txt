@@ -27,6 +27,7 @@ language-qml
 language-qtpro
 language-swift
 language-terraform
+language-x86-64-assembly
 linter
 linter-clang
 linter-eslint
