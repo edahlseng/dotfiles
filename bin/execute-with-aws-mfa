@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Lots of inspiration and starting code taken from: https://www.trek10.com/blog/awsume-aws-assume-made-awesome/
+
+if [[ -z "$(aws configure get mfa_serial)" ]]; then
+	# No MFA device specified – there's nothing more this script can provide, so
+	# let's just call the target command
+	${@}
+	exit $?
+fi
+
+roleArn="$(aws configure get role_arn)"
+if [[ -z "${roleArn}" ]]; then
+	echo "No role arn specified. Ensure that \"aws configure get role_arn\" will return a role."
+	exit 1
+fi
+
+config=$(aws sts assume-role --role-arn $(aws configure get role_arn) --role-session-name awscli)
+
+sessionToken=$(echo "${config}" | jq -r '.Credentials.SessionToken')
+
+accessKeyId=$(echo "${config}" | jq -r '.Credentials.AccessKeyId')
+
+secretAccessKey=$(echo "${config}" | jq -r '.Credentials.SecretAccessKey')
+
+AWS_ACCESS_KEY_ID="${accessKeyId}" AWS_SECRET_ACCESS_KEY="${secretAccessKey}" AWS_SESSION_TOKEN="${sessionToken}" ${@}
+echo $?
