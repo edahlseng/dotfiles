@@ -4,6 +4,15 @@ syntax on
 noremap x d
 nnoremap d "_d
 
+" tell vim where to put its backup files, swap files, and undo files (respectively)
+" the "//" at the end of each directory means that file names will be built from
+" the complete path to the file with all path separators substituted to percent
+" "%" sign. This will ensure file name uniqueness in the preserve directory.
+" Source: https://coderwall.com/p/sdhfug/vim-swap-backup-and-undo-files
+set backupdir=/tmp//
+set dir=/tmp//
+set undodir=/tmp//
+
 "TODO: consolidate below options
 
 " An example for a vimrc file.
