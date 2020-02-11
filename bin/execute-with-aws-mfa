@@ -24,4 +24,4 @@ accessKeyId=$(echo "${config}" | jq -r '.Credentials.AccessKeyId')
 secretAccessKey=$(echo "${config}" | jq -r '.Credentials.SecretAccessKey')
 
 AWS_ACCESS_KEY_ID="${accessKeyId}" AWS_SECRET_ACCESS_KEY="${secretAccessKey}" AWS_SESSION_TOKEN="${sessionToken}" ${@}
-echo $?
+exit $?
