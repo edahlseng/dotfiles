@@ -21,8 +21,13 @@
     formatCOnSave: true
     formatCPlusPlusOnSave: true
   core:
+    customFileTypes:
+      "source.terraform": [
+        "tf"
+      ]
     disabledPackages: [
       "kak-mode"
+      "linter-pylint"
     ]
     hideGitIgnoredFiles: false
     telemetryConsent: "limited"
@@ -30,10 +35,6 @@
       "one-dark-ui"
       "monokai"
     ]
-    customFileTypes:
-      'source.terraform': [
-        'tf'
-      ]
   editor:
     fontFamily: "Menlo Regular"
     fontSize: 11
@@ -73,6 +74,7 @@
     newVersion: true
   "linter-ui-default":
     panelHeight: 69
+    panelRepresents: "Entire Project"
   metrics:
     userId: "352f3ca5a6c75d15bba3a83230f85e64aca3a111"
   "one-dark-ui": {}
