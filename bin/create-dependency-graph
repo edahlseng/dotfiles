@@ -1,0 +1,108 @@
+#!/usr/bin/env zsh
+
+set -o errexit
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+	executedFile="${BASH_SOURCE[0]}"
+else
+	executedFile=$(readlink -f "${BASH_SOURCE[0]}")
+fi
+parentDirectory=$(cd "$(dirname "${executedFile}")" && pwd)
+rootDirectory=$(cd "$(dirname "$parentDirectory")" && pwd)
+
+# ------------------------------------------------------------------------------
+# Process arguments
+# ------------------------------------------------------------------------------
+
+displayUsageAndExit() {
+	echo "Usage: create-dependency-graph [options and arguments]"
+	echo ""
+	echo "Options:"
+	echo "  -i, --input-file <input-file>            Path to the file listing the projects to include in the dependency analysis"
+	echo "  --minimum-indegree <minimum-indegree>    The minimum indegree for the dependency graph. All dependencies that do not meet this minimum are pruned. (The default is 0; projects are never pruned.)"
+	echo "  -o, --output-file <output-file>          File path to output the graph to (PDF format). Defaults to \"./dependencies.pdf\"."
+	exit ${1:-1}
+}
+
+arguments=("${@}")
+projects=()
+outputPath="dependencies.pdf"
+minimumIndegree=0
+
+while test $# -gt 0; do
+	case "${1}" in
+		"-i"|"--input-file")
+			shift
+			projects=($(cat "${1}"))
+			;;
+		"--minimum-indegree")
+			shift
+			minimumIndegree="${1}"
+			;;
+		"-o"|"--output-file")
+			shift
+			outputPath="${1}"
+			;;
+		*)
+			echo "Invalid option: ${1}"
+			echo ""
+			displayUsageAndExit 1
+			;;
+	esac
+	shift
+done
+
+if [[ -e "${outputPath}" ]]; then
+	echo "${outputPath} already exists. Please remove before continuing."
+	exit 1
+fi
+
+temporaryDotFile="$(mktemp)"
+
+echo "digraph A {" >> "${temporaryDotFile}"
+
+for project in "${projects[@]}"; do
+	projectParts=($(echo ${project} | tr ";" "\n"))
+	projectName="${projectParts[1]}"
+	projectType="${projectParts[2]}"
+	projectPath="${projectParts[3]}"
+	if [[ -z "${projectPath}" ]]; then
+		projectPath="${projectName}"
+	fi
+
+	if [[ -d "${projectPath}" ]]; then
+		echo "Working on ${projectName}"
+		cd "${projectPath}"
+
+		if ! [[ -e "./package.json" ]]; then
+			echo "${projectPath} does not contain a package.json file"
+			cd - > /dev/null
+			continue
+		fi
+
+		dependencies=($(cat package.json | jq -r ".dependencies | to_entries[].key"))
+		separator="\" \""
+		dependenciesSpaceAndQuoteDelimited=$(printf "${separator}%s" "${dependencies[@]}" )
+		dependenciesSpaceAndQuoteDelimited='"'"${dependenciesSpaceAndQuoteDelimited:${#separator}}"'"' # remove leading separator, and add surrounding quotes
+
+		case "${projectType}" in
+			"service")
+				echo "\"${projectName}\" [fillcolor = \"#EF4B53\", fontcolor = \"#FFFFFF\", penwidth = 0, style=filled];" >> "${temporaryDotFile}"
+				;;
+			*)
+				echo "\"${projectName}\" [fillcolor = \"#3A80F1\", fontcolor = \"#FFFFFF\", penwidth = 0, style=filled];" >> "${temporaryDotFile}"
+				;;
+		esac
+
+		echo "\"${projectName}\" -> {${dependenciesSpaceAndQuoteDelimited}};" >> "${temporaryDotFile}"
+		cd - > /dev/null
+	else
+		echo "${projectName} is not a path that exists from the current working directory"
+	fi
+done
+
+echo "}" >> "${temporaryDotFile}"
+
+gvpr -c "N[$.style != \"filled\" && $.indegree < ${minimumIndegree}]{delete(root, $)}" "${temporaryDotFile}" | dot -Tpdf > "${outputPath}"
+
+open "${outputPath}"
