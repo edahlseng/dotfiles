@@ -69,6 +69,8 @@
     ]
   "linter-flow":
     executablePath: "./node_modules/.bin/flow"
+  "linter-terraform-syntax":
+    newVersion: true
   "linter-ui-default":
     panelHeight: 69
   metrics:

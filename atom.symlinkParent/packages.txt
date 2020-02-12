@@ -37,6 +37,7 @@ linter-pylint
 linter-stylelint
 linter-swagger
 linter-swiftc
+linter-terraform-syntax
 linter-ui-default
 monokai
 nrepl
