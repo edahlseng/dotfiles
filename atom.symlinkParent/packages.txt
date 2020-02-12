@@ -43,6 +43,7 @@ monokai
 nrepl
 parinfer
 prettier-atom
+python-black
 teletype
 terminal-plus
 terraform-fmt
