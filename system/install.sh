@@ -40,7 +40,7 @@ install() {
 	find "${dotfilesDirectory}" -name install.sh | grep -v system/install.sh | while read installer ; do sh -c "\"${installer}\"" ; done
 
 	# Python installers
-	pip3 install pylint
+	pip3 install pylint black
 	cd -
 }
 
