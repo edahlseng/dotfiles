@@ -6,7 +6,6 @@ busy-signal
 clang-format
 dash
 flow-ide
-focus
 hex-view
 hyperclick
 intentions
@@ -50,3 +49,4 @@ terraform-fmt
 vim-mode-plus
 vim-mode-plus-keymaps-for-surround
 
+edahlseng/atom-package-focus
