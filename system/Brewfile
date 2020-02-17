@@ -5,6 +5,7 @@ tap "homebrew/bundle"
 tap "homebrew/core"
 tap "dunn/emacs"
 tap "edahlseng/core"
+tap "golangci/tap"
 tap "heroku/brew"
 tap "mongodb/brew"
 
@@ -61,6 +62,7 @@ brew "edahlseng/core/clang-tidy"
 brew "edahlseng/core/git-sweep"
 brew "edahlseng/core/notes-organizer"
 brew "edahlseng/core/swift-format", args: ["HEAD"]
+brew "golangci/tap/golangci-lint"
 brew "heroku/brew/heroku"
 brew "mongodb/brew/mongodb-community"
 
