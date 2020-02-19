@@ -14,6 +14,7 @@
 	last	= log -1 HEAD
 	master  = !git fetch $(git for-each-ref --format='%(upstream:remotename)' refs/heads/master) && git checkout -B master $(git for-each-ref --format='%(upstream:short)' refs/heads/master)
 	hub		= !open "$(git remote get-url origin | sed 's/^git@github\\.com:/https:\\/\\/github.com\\//' | sed -E 's/^(.+)\\.git$/\\1/')"
+	publish	= !git push --set-upstream origin $(git symbolic-ref HEAD 2>/dev/null)
 [color]
 	diff = auto
 	status = auto
