@@ -192,6 +192,7 @@ installLaunchAgents() {
 cd "${dotfilesRoot}"
 echo ""
 
+linkFile "${dotfilesRoot}" ~/.dotfiles
 setupGitConfig
 installDotfiles
 installDotfilesDirectory
