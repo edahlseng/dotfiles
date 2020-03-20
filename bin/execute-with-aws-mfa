@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Lots of inspiration and starting code taken from: https://www.trek10.com/blog/awsume-aws-assume-made-awesome/
+# Thanks to https://www.trek10.com/blog/awsume-aws-assume-made-awesome/ for inspiration and starting code
 
 mfaSerial="$(aws configure get mfa_serial)"
 if [[ -z "${mfaSerial}" ]]; then
@@ -24,6 +24,10 @@ sessionToken=$(echo "${config}" | jq -r '.Credentials.SessionToken')
 accessKeyId=$(echo "${config}" | jq -r '.Credentials.AccessKeyId')
 
 secretAccessKey=$(echo "${config}" | jq -r '.Credentials.SecretAccessKey')
+
+for variable in $(compgen -e | grep -E "^EXECUTE_WITH_AWS_MFA_PASSTHROUGH_"); do
+	export ${variable#EXECUTE_WITH_AWS_MFA_PASSTHROUGH_}="${!variable}"
+done
 
 AWS_ACCESS_KEY_ID="${accessKeyId}" AWS_SECRET_ACCESS_KEY="${secretAccessKey}" AWS_SESSION_TOKEN="${sessionToken}" ${@}
 exit $?
