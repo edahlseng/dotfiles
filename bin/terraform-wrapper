@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# This script wraps terraform in order to allow backend configuration to be specified
+# via environment variables
+
+if [[ "${1}" == "init" ]]; then
+	backendConfiguration=()
+	for variable in $(compgen -e | grep -E "^TERRAFORM_BACKEND_"); do
+		backendConfiguration+=("-backend-config=${variable#TERRAFORM_BACKEND_}=${!variable}")
+	done
+
+	terraform ${@} ${backendConfiguration[@]}
+else
+	terraform ${@}
+fi
