@@ -1,8 +1,10 @@
 #!/bin/bash
 
+set -e
+
 # Thanks to https://www.trek10.com/blog/awsume-aws-assume-made-awesome/ for inspiration and starting code
 
-mfaSerial="$(aws configure get mfa_serial)"
+mfaSerial="$(aws configure get mfa_serial || echo "")"
 if [[ -z "${mfaSerial}" ]]; then
 	# No MFA device specified – there's nothing more this script can provide, so
 	# let's just call the target command
@@ -10,13 +12,13 @@ if [[ -z "${mfaSerial}" ]]; then
 	exit $?
 fi
 
-roleArn="$(aws configure get role_arn)"
+roleArn="$(aws configure get role_arn || echo "")"
 if [[ -z "${roleArn}" ]]; then
 	read -s -p "Enter MFA code for ${mfaSerial}: " mfaToken
 	echo ""
 	config=$(aws sts get-session-token --serial-number "${mfaSerial}" --token-code "${mfaToken}")
 else
-	config=$(aws sts assume-role --role-arn $(aws configure get role_arn) --role-session-name awsc)
+	config=$(aws sts assume-role --role-arn "${roleArn}" --role-session-name awscli)
 fi
 
 sessionToken=$(echo "${config}" | jq -r '.Credentials.SessionToken')
