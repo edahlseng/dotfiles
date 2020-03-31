@@ -2,6 +2,8 @@
 
 set -e
 
+credentialsCacheDirectory="${HOME}/.aws/execute-with-mfa-cache"
+
 # Thanks to https://www.trek10.com/blog/awsume-aws-assume-made-awesome/ for inspiration and starting code
 
 mfaSerial="$(aws configure get mfa_serial || echo "")"
@@ -14,10 +16,17 @@ fi
 
 roleArn="$(aws configure get role_arn || echo "")"
 if [[ -z "${roleArn}" ]]; then
-	read -s -p "Enter MFA code for ${mfaSerial}: " mfaToken
-	echo ""
-	config=$(aws sts get-session-token --serial-number "${mfaSerial}" --token-code "${mfaToken}")
+	credentialsCacheFile="${credentialsCacheDirectory}/${AWS_PROFILE}"
+	config="$(cat "${credentialsCacheFile}" 2>/dev/null || echo "")"
+	if [[ "$(echo "${config}" | jq -r '.Credentials.Expiration')" < "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" ]]; then
+		read -s -p "Enter MFA code for ${mfaSerial}: " mfaToken
+		echo ""
+		config=$(aws sts get-session-token --serial-number "${mfaSerial}" --token-code "${mfaToken}")
+		mkdir -p "$(dirname "${credentialsCacheFile}")"
+		echo "${config}" > "${credentialsCacheFile}"
+	fi
 else
+	# The `aws sts assume-role` command will automatically cache credentials
 	config=$(aws sts assume-role --role-arn "${roleArn}" --role-session-name awscli)
 fi
 
