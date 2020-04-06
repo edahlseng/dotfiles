@@ -1,0 +1,66 @@
+#!/bin/bash
+
+set -e
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+	executedFile="${BASH_SOURCE[0]}"
+else
+	executedFile=$(readlink -f "${BASH_SOURCE[0]}")
+fi
+scriptName="$(basename "${executedFile}")"
+
+credentialsCacheDirectory="${HOME}/.aws/aws-set-up-profile-with-mfa-cache"
+
+if [[ -z "${AWS_PROFILE}" ]]; then
+	echo "No AWS_PROFILE environment variable specified"
+	exit 1
+fi
+echo "Setting up profile \"${AWS_PROFILE}\" with temporary credentials"
+
+mfaSerial="$(aws configure get mfa_serial || echo "")"
+if [[ -z "${mfaSerial}" ]]; then
+	echo "No MFA device specified"
+	exit 1
+fi
+
+sourceProfile="$(aws configure get aws_set_up_profile_with_mfa_source_profile || echo "")"
+
+if [[ -z "${sourceProfile}" ]]; then
+	echo "No aws_set_up_profile_with_mfa_source_profile specified. aws_set_up_profile_with_mfa_source_profile needs to be specified so that this script doesn't overwrite credentials!"
+	exit 1
+fi
+
+sourceAwsAccessKeyId="$(aws configure --profile "${sourceProfile}" get aws_access_key_id || echo "")"
+sourceAwsSecretAccessKey="$(aws configure --profile "${sourceProfile}" get aws_secret_access_key || echo "")"
+
+if [[ -z "${sourceAwsAccessKeyId}" ]]; then
+	echo "No aws_access_key_id specified in the source profile."
+	exit 1
+fi
+
+if [[ -z "${sourceAwsSecretAccessKey}" ]]; then
+	echo "No aws_secret_access_key specified in the source profile."
+	exit 1
+fi
+
+credentialsCacheFile="${credentialsCacheDirectory}/${AWS_PROFILE}"
+config="$(cat "${credentialsCacheFile}" 2>/dev/null || echo "")"
+if [[ "$(echo "${config}" | jq -r '.Credentials.Expiration')" < "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" ]]; then
+	read -s -p "Enter MFA code for ${mfaSerial}: " mfaToken
+	echo ""
+	config="$(AWS_ACCESS_KEY_ID="${sourceAwsAccessKeyId}" AWS_SECRET_ACCESS_KEY="${sourceAwsSecretAccessKey}" aws sts get-session-token --serial-number "${mfaSerial}" --token-code "${mfaToken}")"
+	mkdir -p "$(dirname "${credentialsCacheFile}")"
+	echo "${config}" > "${credentialsCacheFile}"
+else
+	echo "Temporary credentials found in cache; using those"
+fi
+
+sessionToken=$(echo "${config}" | jq -r '.Credentials.SessionToken')
+accessKeyId=$(echo "${config}" | jq -r '.Credentials.AccessKeyId')
+secretAccessKey=$(echo "${config}" | jq -r '.Credentials.SecretAccessKey')
+
+aws configure set --profile "${AWS_PROFILE}" aws_access_key_id "${accessKeyId} # Temporary, set by ${scriptName}"
+aws configure set --profile "${AWS_PROFILE}" aws_secret_access_key "${secretAccessKey} # Temporary, set by ${scriptName}"
+aws configure set --profile "${AWS_PROFILE}" aws_session_token "${sessionToken} # Temporary, set by ${scriptName}"
+
+echo "Done"

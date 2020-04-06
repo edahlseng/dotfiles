@@ -12,6 +12,6 @@ alias rm='echo "Use the \"trash\" command instead" && :'
 
 alias task='task-wrapper'
 
-alias terraform='execute-with-aws-mfa terraform-wrapper'
+alias terraform='terraform-wrapper'
 
 alias ubuntu='docker run --rm --interactive --tty --volume "$(pwd)":"$(pwd)" --workdir "$(pwd)" ubuntu:latest'
