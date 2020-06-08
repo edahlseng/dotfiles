@@ -15,6 +15,7 @@
 #    feat     (new feature)
 #    fix      (bug fix)
 #    perf     (improving performance)
+#    pr       (making change based on PR review; no other notable changes)
 #    refactor (refactoring production code)
 #    revert   (reverting a previous change)
 #    style    (formatting, semicolons, etc; no code change)
