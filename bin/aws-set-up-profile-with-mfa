@@ -59,8 +59,8 @@ sessionToken=$(echo "${config}" | jq -r '.Credentials.SessionToken')
 accessKeyId=$(echo "${config}" | jq -r '.Credentials.AccessKeyId')
 secretAccessKey=$(echo "${config}" | jq -r '.Credentials.SecretAccessKey')
 
-aws configure set --profile "${AWS_PROFILE}" aws_access_key_id "${accessKeyId} # Temporary, set by ${scriptName}"
-aws configure set --profile "${AWS_PROFILE}" aws_secret_access_key "${secretAccessKey} # Temporary, set by ${scriptName}"
-aws configure set --profile "${AWS_PROFILE}" aws_session_token "${sessionToken} # Temporary, set by ${scriptName}"
+aws configure set --profile "${AWS_PROFILE}" aws_access_key_id "${accessKeyId}"
+aws configure set --profile "${AWS_PROFILE}" aws_secret_access_key "${secretAccessKey}"
+aws configure set --profile "${AWS_PROFILE}" aws_session_token "${sessionToken}"
 
 echo "Done"
