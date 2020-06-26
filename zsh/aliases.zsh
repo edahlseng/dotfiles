@@ -2,6 +2,8 @@ alias cls='clear' # Good 'ol Clear Screen command
 
 alias e='edit'
 
+alias kubectl='kubectl ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
+
 alias make='gmake'
 
 alias pr='pull-request'
