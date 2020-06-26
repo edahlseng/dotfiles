@@ -104,9 +104,13 @@ shouldAddFile() {
 linkFile() {
 	local overwrite_all=false backup_all=false skip_all=false
 
-	if shouldAddFile "${1}" "${2}"; then
-		ln -s "${1}" "${2}"
-		success "Linked ${1} to ${2}"
+	if [[ "${UNLINK}" == "true" ]]; then
+		rm "${2}"
+	else
+		if shouldAddFile "${1}" "${2}"; then
+			ln -s "${1}" "${2}"
+			success "Linked ${1} to ${2}"
+		fi
 	fi
 }
 
