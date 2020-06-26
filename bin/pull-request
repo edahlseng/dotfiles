@@ -1,3 +1,0 @@
-#!/bin/bash
-
-exec $ZSH/node-scripts/pull-request/node_modules/.bin/babel-node $ZSH/node-scripts/pull-request/app/index.js
