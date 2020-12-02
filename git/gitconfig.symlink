@@ -51,3 +51,5 @@
 [user]
 	name = Eric Dahlseng
 	email = edahlseng@users.noreply.github.com
+[pull]
+	rebase = true
