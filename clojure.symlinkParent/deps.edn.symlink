@@ -16,7 +16,7 @@
   ;; :paths ["src"]
 
   ;; External dependencies
- 
+
   ;; :deps {
   ;;   org.clojure/clojure {:mvn/version "1.10.1"}
   ;; }
@@ -35,7 +35,10 @@
   ;;   :test {:extra-paths ["test"]}
   ;; }
   :aliases {:rebel {:extra-deps {com.bhauman/rebel-readline {:mvn/version "0.1.4"}}
-                    :main-opts  ["-m" "rebel-readline.main"]}}
+                    :main-opts  ["-m" "rebel-readline.main"]}
+            :nREPL {:extra-deps {nrepl/nrepl {:mvn/version "0.8.2"}}
+                    :main-opts ["-m" "nrepl.cmdline" "-p" "12345"]}
+  }
 
   ;; Provider attributes
 
