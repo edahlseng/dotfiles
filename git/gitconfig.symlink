@@ -48,3 +48,6 @@
 [merge "npm-merge-driver"]
 	name = Automatically merge npm lockfiles
 	driver = npx npm-merge-driver merge %A %O %B %P
+[user]
+	name = Eric Dahlseng
+	email = edahlseng@users.noreply.github.com
