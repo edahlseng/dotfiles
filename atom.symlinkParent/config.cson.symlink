@@ -26,8 +26,10 @@
         "tf"
       ]
     disabledPackages: [
-      "kak-mode"
       "linter-pylint"
+      "vim-mode-plus"
+      "Hydrogen"
+      "clang-format"
     ]
     hideGitIgnoredFiles: false
     telemetryConsent: "limited"
@@ -75,9 +77,11 @@
   "linter-ui-default":
     panelHeight: 69
     panelRepresents: "Entire Project"
+    showPanel: true
   metrics:
     userId: "352f3ca5a6c75d15bba3a83230f85e64aca3a111"
   "one-dark-ui": {}
+  parinfer: {}
   "prettier-atom":
     formatOnSaveOptions:
       enabled: true
