@@ -43,6 +43,7 @@ nrepl
 parinfer
 prettier-atom
 python-black
+sort-lines
 teletype
 terminal-plus
 terraform-fmt
