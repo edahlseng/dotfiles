@@ -38,7 +38,7 @@
       "monokai"
     ]
   editor:
-    fontFamily: "Menlo Regular"
+    fontFamily: "FiraCode-Retina"
     fontSize: 11
     invisibles: {}
     scrollPastEnd: true

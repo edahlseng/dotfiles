@@ -13,9 +13,8 @@
 }
 
 .editor {
-    font-family:'Menlo-Regular';
     font-size: 12;
-    -webkit-font-smoothing: antialiased; 
+    -webkit-font-smoothing: antialiased;
 }
 
 .editor .cursor {
