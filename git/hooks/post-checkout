@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-if [[ "$1" == "0000000000000000000000000000000000000000" ]]; then
+command -v git-lfs >/dev/null 2>&1 || { echo >&2 "\nThis repository is configured for Git LFS but 'git-lfs' was not found on your path. If you no longer wish to use Git LFS, remove this hook by deleting .git/hooks/post-checkout.\n"; exit 2; }
+git lfs post-checkout "$@"
+
+if [[ "${1}" == "0000000000000000000000000000000000000000" ]]; then
 	# This must be a new repo being cloned
 	exit
 fi
 
 parentDirectory=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 
-source "$parentDirectory"/common.sh $1 $2
+source "${parentDirectory}"/common.sh $1 $2
 
 check_run package.json "npm_config_package_lock=false npm install"
