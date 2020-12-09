@@ -105,6 +105,11 @@
 ".bibtex.text":
   editor:
     softWrap: true
+".clojure.source":
+  editor:
+    autoIndent: true
+    showIndentGuide: false
+    tabLength: 2
 ".latex.tex.text":
   editor:
     softWrap: true
