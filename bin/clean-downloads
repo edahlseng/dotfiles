@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+downloadsDirectory="${HOME}/Downloads"
+trashDirectory="${HOME}/.Trash"
+daysToKeep="14"
+
+numberOfFilesToDelete=$(find "${downloadsDirectory}" -maxdepth 1 -mtime +"${daysToKeep}d" | wc -l | xargs)
+if [[ "${numberOfFilesToDelete}" -gt 0 ]]; then
+    find "${downloadsDirectory}" -maxdepth 1 -mtime +"${daysToKeep}d" -exec mv {} "${trashDirectory}" \; -print
+    echo ""
+    echo "Removed ${numberOfFilesToDelete} files older than ${daysToKeep} days from Downloads."
+else
+    echo "There's nothing older than ${daysToKeep} days in Downloads to remove."
+fi
