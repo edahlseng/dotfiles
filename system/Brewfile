@@ -73,6 +73,7 @@ brew "golangci/tap/golangci-lint"
 brew "heroku/brew/heroku"
 brew "mongodb/brew/mongodb-community"
 
+cask "amazon-workspaces"
 cask "anki"
 cask "arduino"
 cask "atom"
