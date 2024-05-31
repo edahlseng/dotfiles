@@ -3,6 +3,9 @@
 
 # This script is run whenever an interactive zsh shell is started
 
+# Export Homebrew path variables
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
@@ -47,9 +50,9 @@ eval "$(direnv hook zsh)"
 [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # The following line should be at the end of this file
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # The following lines must come after the syntax highlighting line above
-source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+source "${HOMEBREW_PREFIX}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
