@@ -68,7 +68,6 @@ brew "zsh-syntax-highlighting"
 brew "dunn/emacs/slime"
 brew "edahlseng/core/clang-tidy"
 brew "edahlseng/core/git-sweep"
-brew "edahlseng/core/notes-organizer"
 brew "edahlseng/core/swift-format", args: ["HEAD"]
 brew "golangci/tap/golangci-lint"
 brew "heroku/brew/heroku"
