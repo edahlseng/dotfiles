@@ -32,6 +32,7 @@ linter
 linter-clang
 linter-eslint
 linter-javac
+linter-kondo
 linter-pylint
 linter-stylelint
 linter-swagger
