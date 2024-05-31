@@ -27,6 +27,7 @@ language-qml
 language-qtpro
 language-swift
 language-terraform
+language-vhdl
 language-x86-64-assembly
 linter
 linter-clang
@@ -43,6 +44,7 @@ monokai
 nrepl
 parinfer
 prettier-atom
+proto-repl
 python-black
 sort-lines
 teletype
@@ -50,5 +52,4 @@ terminal-plus
 terraform-fmt
 vim-mode-plus
 vim-mode-plus-keymaps-for-surround
-
-edahlseng/atom-package-focus
+focus
