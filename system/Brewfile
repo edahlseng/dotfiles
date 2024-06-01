@@ -1,6 +1,7 @@
 cask_args appdir: '/Applications'
 
 tap "homebrew/bundle"
+tap "borkdude/brew"
 tap "edahlseng/core"
 tap "golangci/tap"
 tap "mongodb/brew"
@@ -56,6 +57,7 @@ brew "youtube-dl"
 brew "zsh-autosuggestions"
 brew "zsh-history-substring-search"
 brew "zsh-syntax-highlighting"
+brew "borkdude/brew/clj-kondo"
 brew "edahlseng/core/clang-tidy"
 brew "edahlseng/core/git-sweep"
 brew "golangci/tap/golangci-lint"
