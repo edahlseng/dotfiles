@@ -39,6 +39,9 @@ if [[ "${terminalUpdated}" == "true" ]]; then
 	echo "Terminal must be restarted for setting changes to be applied"
 fi
 
+# Set up input sources
+defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID -string "com.apple.keylayout.Dvorak"
+
 # Set up global domain
 defaults write -globalDomain com.apple.mouse.scaling 3
 defaults write -globalDomain com.apple.scrollwheel.scaling 1
