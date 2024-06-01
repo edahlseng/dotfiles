@@ -65,6 +65,7 @@ brew "mongodb/brew/mongodb-community"
 
 cask "amazon-workspaces"
 cask "anki"
+cask "arc"
 cask "arduino"
 cask "atom"
 cask "backblaze"
