@@ -1,9 +1,6 @@
 cask_args appdir: '/Applications'
 
-tap "homebrew/cask"
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/core"
 tap "edahlseng/core"
 tap "golangci/tap"
 tap "mongodb/brew"
