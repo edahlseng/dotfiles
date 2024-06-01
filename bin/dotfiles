@@ -82,7 +82,8 @@ atExit() {
 
 pushd "${dotfilesDirectory}" > /dev/null
 echo "Updating dotfiles..."
-git pull --ff-only
+
+git pull --ff-only --autostash
 popd > /dev/null
 
 # ------------------------------------------------------------------------------
