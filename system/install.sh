@@ -52,8 +52,5 @@ echo ""
 echo "Running all dotfiles installers..."
 (find "${dotfilesDirectory}" -name install.sh | grep -v system/install.sh | while read installer ; do sh -c "\"${installer}\"" ; done) 1> >(logAsInfo) 2> >(logAsError)
 
-# Python installers
-pip3 install pylint black 1> >(logAsInfo) 2> >(logAsError)
-
 echo ""
 success "Dependencies installed"
