@@ -39,16 +39,23 @@ if [[ "${terminalUpdated}" == "true" ]]; then
 	echo "Terminal must be restarted for setting changes to be applied"
 fi
 
-# Set up input sources
+# Set up keyboard
 defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID -string "com.apple.keylayout.Dvorak"
+defaults write -globalDomain KeyRepeat -int 1
+defaults write -globalDomain InitialKeyRepeat 25
 
-# Set up global domain
+# Set up mouse & trackpad
 defaults write -globalDomain com.apple.mouse.scaling 3
 defaults write -globalDomain com.apple.scrollwheel.scaling 1
 defaults write -globalDomain com.apple.trackpad.forceClick 1
 defaults write -globalDomain com.apple.trackpad.scaling 2.5
-# defaults write -globalDomain InitialKeyRepeat 25
-# defaults write -globalDomain KeyRepeat 2
+
+# Set up Dock
+defaults write com.apple.dock autohide -bool true
+
+killall "Dock" # Restart the Dock for changes to take effect
 
 # Set search engine
 defaults write -globalDomain NSWebServicesProviderWebSearch -dict NSDefaultDisplayName DuckDuckGo NSProviderIdentifier "com.duckduckgo"
+
+echo "You may need to restart for some of the defaults changes to take effect"
