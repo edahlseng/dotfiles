@@ -113,6 +113,7 @@ cask "wireshark"
 cask "xquartz"
 cask "zed"
 cask "zeplin"
+cask "zoom"
 
 mas "Affinity Designer", id: 824171161
 mas "Affinity Photo", id: 824183456
