@@ -158,7 +158,7 @@ installDotfiles() {
 	# Use file descriptor 3 for read here, so that further reads inside of the loop work
 	while IFS='' read -r -u 3 -d $'\0'; do
 		installDotfilesFromSymlinkParent "${REPLY}" "${HOME}/.$(basename "${REPLY%.*}")"
-	done 3< <(find -H "${dotfilesRoot}" -maxdepth 1 -name '*.symlinkParent' -not -path '*.git*' -print0)
+	done 3< <(find -H "${dotfilesRoot}" -maxdepth 2 -name '*.symlinkParent' -not -path '*.git*' -print0)
 }
 
 installDotfilesDirectory() {
