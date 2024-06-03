@@ -4,7 +4,12 @@
 # This script is run whenever an interactive zsh shell is started
 
 # Export Homebrew path variables
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew installs to /opt/homebrew on Apple Silicon Macs, but not on Intel Macs
+if [[ -e /opt/homebrew/bin/brew ]]; then
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+	HOMEBREW_PREFIX=/usr/local
+fi
 
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
