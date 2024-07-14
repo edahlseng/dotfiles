@@ -13,3 +13,15 @@ success() {
 fail() {
 	printf "\r\033[2K  [\033[0;31mFAIL\033[0m] %s\n" "${1}"
 }
+
+logAsInfo() {
+	while read -r data; do
+		info "${data}"
+	done
+}
+
+logAsError() {
+	while read -r data; do
+		fail "${data}"
+	done
+}

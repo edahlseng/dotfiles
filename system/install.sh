@@ -10,18 +10,6 @@ dotfilesDirectory="$(cd "$( dirname "${parentDirectory}" )" && pwd -P)"
 
 source "${parentDirectory}/logging.sh"
 
-logAsInfo() {
-	while read -r data; do
-		info "${data}"
-	done
-}
-
-logAsError() {
-	while read -r data; do
-		fail "${data}"
-	done
-}
-
 # Install homebrew if it doesn't already exist
 if test ! $(which brew); then
 	echo "  Installing Homebrew for you."
