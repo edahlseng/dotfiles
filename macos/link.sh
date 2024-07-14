@@ -14,6 +14,14 @@ source "${dotfilesRoot}/system/linking.sh"
 # ------------------------------------------------------------------------------
 
 echo ""
+if [[ -f "${HOME}/clean-downloads" ]]; then
+    info "Skipping hard-linking of clean-downloads, as ~/clean-downloads already exists"
+else
+    info "Hard-linking clean-downloads to prevent sandbox errors"
+    ln "${dotfilesRoot}/bin/clean-downloads" "${HOME}/clean-downloads"
+fi
+
+echo ""
 info 'Installing Launch Agents'
 mkdir -p "${HOME}/Library/LaunchAgents"
 

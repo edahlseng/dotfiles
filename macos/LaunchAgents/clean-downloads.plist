@@ -5,13 +5,13 @@
 	<key>EnvironmentVariables</key>
 	<dict>
 		<key>PATH</key>
-		<string>/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/sbin:/opt/local/bin</string>
+		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/usr/local/sbin:/opt/local/bin</string>
 	</dict>
 	<key>Label</key>
 	<string>clean-downloads</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/ericdahlseng/Documents/3 Resources/Repositories/Personal.nosync/dotfiles/bin/clean-downloads</string>
+		<string>/Users/ericdahlseng/clean-downloads</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
