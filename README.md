@@ -47,3 +47,5 @@ Thanks
 -------------------------------------------------------------------------------
 
 This project was originally forked from [Zach Holman](https://github.com/holman/dotfiles).
+
+The `git fixup` alias comes from [Jordan Elver](https://jordanelver.co.uk/blog/2020/06/04/fixing-commits-with-git-commit-fixup-and-git-rebase-autosquash/).
