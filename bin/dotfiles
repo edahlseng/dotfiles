@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 #
-# `dot` handles installation, updates, things like that. Run it periodically to make sure you're on the latest and greatest.
+# `dotfiles` handles installation, updates, things like that. Run it periodically to make sure you're on the latest and greatest.
 
 set -e
 
@@ -9,22 +9,128 @@ dotfilesDirectory="$(cd "$( dirname "${parentDirectory}" )" && pwd -P)"
 
 source "${dotfilesDirectory}/system/logging.sh"
 
+bold=$(tput bold)
+normal=$(tput sgr0)
+
 displayUsageAndExit() {
-	echo "dot -- dotfiles management"
+	echo "${bold}dotfiles -- dotfiles management${normal}"
 	echo ""
-	echo "Usage: dot [options]."
+	echo "Usage: dotfiles [subcommand] [arguments and options]."
+	echo ""
+	echo "Subcommands: add, (none)"
+	echo ""
+	echo "${bold}Add subcommand:${normal} Adds a symlink for a file or directory to the dotfiles directory"
+	echo ""
+	echo "Usage: dotfiles add <path> [options]"
+	echo ""
+	echo "Arguments:"
+	echo "  path: The path to add to the dotfiles directory"
+	echo ""
+	echo "${bold}Default with no subcommand specified:${normal} Updates system to match dotfiles directory"
+	echo ""
+	echo "Usage: dotfiles [options]."
 	echo ""
 	echo "If no options are specified, the command will ensure that the local machine is in sync with the dotfiles repository (effectively running with options -d -i -l)."
 	echo ""
 	echo "Options:"
-	echo "  -d, --defaults          Set defaults"
+	echo "  -c, --command-line-sudo-askpass  Use command line prompt to ask for sudo password"
+	echo "  -d, --defaults                   Set defaults"
 	echo "  -e, --edit              Open dotfiles directory for editing"
-	echo "  -g, --gui-sudo-askpass  Use GUI prompt to ask for sudo password"
 	echo "  -h, --help              Show this help message and exit"
 	echo "  -i, --install           Install dependencies"
 	echo "  -l, --link              Link dotfiles into the proper place"
 	exit
 }
+
+# ------------------------------------------------------------------------------
+# Add subcommand
+# ------------------------------------------------------------------------------
+
+if [[ "${1}" == "add" ]]; then
+    if [[ ! -e "${2}" ]]; then
+        echo "Error: Could not find path: ${2}"
+        exit 1
+    fi
+
+    if [[ "${2}" == /* ]]; then
+        # Absolute path
+        path="${2}"
+    else
+        # Relative path
+        path="$(pwd)/${2}"
+    fi
+
+    if [[ ! "${path}" == "${HOME}"/* ]]; then
+        echo "Error: Path is not within home directory: ${2}"
+        exit 1
+    fi
+
+    iteratorPath="${path}"
+    pathSegments=()
+    while [[ "${iteratorPath}" != "${HOME}" ]]; do
+      if [[ -L "${iteratorPath}" ]]; then
+        echo "Error: ${iteratorPath} is already a symlink"
+        exit 1
+      fi
+      pathSegments+=("${iteratorPath}")
+      iteratorPath="$(dirname "${iteratorPath}")"
+    done
+
+    cd "${dotfilesDirectory}"
+    options=()
+    for directory in */; do
+        if [[ "${directory}" != "bin/" ]]; then
+            options+=("$(basename ${directory})")
+        fi
+    done
+    newPackage="<New package>"
+    options+=("${newPackage}")
+
+    echo "${options[@]}"
+
+    select package in "${options[@]}"; do
+        [[ -n "${package}" ]] && break
+        echo ">>> Invalid Selection"
+    done
+
+    if [[ "${package}" == "${newPackage}" ]]; then
+        while true; do
+            read -p "What should be the name of the new package? " package
+            if [[ "${package}" == *\/* || "${package}" == *\\* ]]; then
+                echo "Package name cannot have a forward slash or a backward slash"
+            elif [[ -z "${package}" ]]; then
+                continue
+            else
+                break
+            fi
+        done
+    fi
+
+    echo "will add to this package: ${package}"
+
+    prefix="${dotfilesDirectory}/${package}"
+
+    mkdir -p "${prefix}"
+
+    for (( i=${#pathSegments[@]}-1 ; i>=1 ; i-- )) ; do
+        # Need to remove the leading dot due to assumptions made in link.sh
+        part="$(basename "${pathSegments[i]}")"
+        prefix="${prefix}/${part#.}.symlinkParent"
+        mkdir -p "${prefix}"
+    done
+
+    newSource="${prefix}/$(basename "${path}")"
+
+    cp "${path}" "${newSource}"
+    rm "${path}"
+    ln -s "${newSource}" "${path}"
+
+    exit
+fi
+
+# ------------------------------------------------------------------------------
+# Default (no) subcommand
+# ------------------------------------------------------------------------------
 
 if test $# -eq 0; then
 	# If no options are specified, run as if -d -i -l was called
