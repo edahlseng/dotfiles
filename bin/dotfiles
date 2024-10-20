@@ -26,6 +26,10 @@ displayUsageAndExit() {
 	echo "Arguments:"
 	echo "  path: The path to add to the dotfiles directory"
 	echo ""
+	echo "${bold}Git subcommand:${normal} Runs git in the dotfiles directory without changing current working directory"
+	echo ""
+	echo "Usage: dotfiles git [git arguments and options]"
+	echo ""
 	echo "${bold}Default with no subcommand specified:${normal} Updates system to match dotfiles directory"
 	echo ""
 	echo "Usage: dotfiles [options]."
@@ -125,6 +129,16 @@ if [[ "${1}" == "add" ]]; then
     rm "${path}"
     ln -s "${newSource}" "${path}"
 
+    exit
+fi
+
+# ------------------------------------------------------------------------------
+# Git subcommand
+# ------------------------------------------------------------------------------
+
+if [[ "${1}" == "git" ]]; then
+    shift
+    git -C "${dotfilesDirectory}" "${@}"
     exit
 fi
 
