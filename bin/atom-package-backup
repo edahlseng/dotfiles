@@ -8,4 +8,4 @@
 
 set -e
 
-apm list --installed --bare | sed -E 's/@[0-9]+\.[0-9]+\.[0-9]+$//' > ~/.dotfiles/atom.symlinkParent/packages.txt
+apm list --installed --bare | sed -E 's/@[0-9]+\.[0-9]+\.[0-9]+$//' > ~/.dotfiles/atom/atom.symlinkParent/packages.txt

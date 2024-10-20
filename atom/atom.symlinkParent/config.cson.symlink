@@ -26,6 +26,9 @@
     formatObjectiveCOnSave: true
   core:
     customFileTypes:
+      "source.clojure": [
+        "mal"
+      ]
       "source.terraform": [
         "tf"
       ]
