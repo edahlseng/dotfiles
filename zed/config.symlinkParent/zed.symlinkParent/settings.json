@@ -1,0 +1,38 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "tabs": {
+    "close_position": "left"
+  },
+  "features": {
+    "inline_completion_provider": "none"
+  },
+  "theme": "Ayu Dark",
+  "vim_mode": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "hour_format": "hour24",
+  "languages": {
+    "Clojure": {
+      "tab_size": 2,
+      "indent_guides": {
+        "enabled": true,
+        "line_width": 1,
+        "active_line_width": 3,
+        "coloring": "indent_aware",
+        "background_coloring": "disabled"
+      }
+    },
+    "Markdown": {
+      "soft_wrap": "editor_width"
+    }
+  },
+  "show_wrap_guides": true,
+  "wrap_guides": [80]
+}
