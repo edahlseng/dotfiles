@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+requested_agent="${1}"
+shift
+
+PROFILE=""
+COMMAND_AND_ARGS=()
+case "${requested_agent}" in
+    antigravity|agy)
+        PROFILE="antigravity"
+        COMMAND_AND_ARGS=("agy" "--dangerously-skip-permissions")
+        ;;
+    *)
+        echo "Error: The requested agent is not supported: ${requested_agent}. Supported agents are antigravity/agy"
+        exit 1
+esac
+
+if [[ "${1}" == "--" ]]; then
+    shift
+    COMMAND_AND_ARGS=("${@}")
+else
+    COMMAND_AND_ARGS+=("${@}")
+fi
+
+EXTRA_ARGUMENTS=(--allow-cwd)
+
+if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    # Allow access to the git common directory, particularly useful when running in a worktree or a subdirectory
+    EXTRA_ARGUMENTS+=(--allow "$(git rev-parse --path-format=absolute --git-common-dir)")
+fi
+
+exec nono run --profile "${PROFILE}" "${EXTRA_ARGUMENTS[@]}" -- "${COMMAND_AND_ARGS[@]}"
