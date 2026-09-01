@@ -1,0 +1,3 @@
+[aliases]
+create = "wt switch --create --no-cd {{ args }}"
+open = "wt switch --no-cd -x 'zed --new {% raw %}{{ worktree_path }}{% endraw %}' {{ args }}"
