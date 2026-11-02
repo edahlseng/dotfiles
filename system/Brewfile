@@ -73,7 +73,6 @@ brew "golangci/tap/golangci-lint"
 brew "mongodb/brew/mongodb-community"
 
 cask "akiflow"
-cask "amazon-workspaces"
 cask "anki"
 cask "arduino-ide"
 cask "backblaze"
