@@ -3,9 +3,10 @@
 # This script shadows brew in order to keep the dotfiles Brewfile in sync with
 # packages that are installed or uninstalled from the command line.
 #
-# After a successful `brew install` or `brew uninstall`, the dotfiles repository
-# is pulled, the Brewfile is updated with `brew bundle add`/`brew bundle remove`,
-# and the change is committed and pushed. All other commands are passed through.
+# After a successful `brew install` or `brew uninstall` (or its aliases `remove`
+# and `rm`), the dotfiles repository is pulled, the Brewfile is updated with
+# `brew bundle add`/`brew bundle remove`, and the change is committed and pushed.
+# All other commands are passed through.
 
 parentDirectory="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 dotfilesDirectory="$(cd "$( dirname "${parentDirectory}" )" && pwd -P)"
