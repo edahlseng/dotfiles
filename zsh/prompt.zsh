@@ -60,10 +60,10 @@ kubernetesContext() {
 }
 
 directoryName() {
-	echo "%{${fg_bold[black]}%}%0~/%{${reset_color}%}"
+    echo "%{${fg_bold[default]}%}%0~/%{${reset_color}%}"
 }
 
-export PROMPT=$'\n${fg_bold[black]}%m:%{${reset_color}%} $(directoryName) $(gitDirty)$(unpushedAndStashes)$(kubernetesContext)\n› '
+export PROMPT=$'\n${fg_bold[default]}%m:%{${reset_color}%} $(directoryName) $(gitDirty)$(unpushedAndStashes)$(kubernetesContext)\n› '
 setPrompt () {
 	export RPROMPT="%{${fg_bold[cyan]}%}%{${reset_color}%}"
 }
