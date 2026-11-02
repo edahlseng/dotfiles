@@ -19,11 +19,12 @@ displayUsageAndExit() {
 	echo ""
 	echo "${bold}Subcommands:${normal}"
 	echo "  add     Adds a symlink for a file or directory to the dotfiles directory"
+	echo "  check   Checks the status of dotfiles (git, packages, symlinks, etc.)"
 	echo "  edit    Opens dotfiles directory for editing"
 	echo "  git     Runs git in the dotfiles directory without changing current working directory"
 	echo "  sync    Installs and uninstalls Homebrew packages so that they exactly match the Brewfile"
 	echo ""
-	echo "If no options are specified, the command will default to sync."
+	echo "If no options are specified, the command will default to check."
 	echo ""
 	echo "${bold}Global Options:${normal}"
 	echo "  -c, --command-line-sudo-askpass  Use command line prompt to ask for sudo password"
@@ -41,6 +42,13 @@ displayAddUsageAndExit() {
 	echo ""
 	echo "Arguments:"
 	echo "  path: The path to add to the dotfiles directory"
+	exit
+}
+
+displayCheckUsageAndExit() {
+	echo "${bold}Check subcommand:${normal} Checks the status of dotfiles (git, packages, symlinks, etc.)"
+	echo ""
+	echo "Usage: dotfiles check"
 	exit
 }
 
@@ -73,6 +81,9 @@ if [[ "${1}" == "help" ]]; then
     case "${2}" in
         "add")
             displayAddUsageAndExit
+            ;;
+        "check")
+            displayCheckUsageAndExit
             ;;
         "edit")
             displayEditUsageAndExit
@@ -237,11 +248,227 @@ if [[ "${1}" == "sync" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
+# Check subcommand
+# ------------------------------------------------------------------------------
+
+runCheck() {
+    local issues=0
+
+    # --------------------------------------------------------------------------
+    # Git status
+    # --------------------------------------------------------------------------
+
+    echo "${bold}Dotfiles Git Status${normal}"
+
+    local branch
+    branch="$(git -C "${dotfilesDirectory}" symbolic-ref --short HEAD 2>/dev/null || git -C "${dotfilesDirectory}" rev-parse --short HEAD 2>/dev/null || echo "unknown")"
+
+    local uncommitted
+    uncommitted="$(git -C "${dotfilesDirectory}" status --porcelain 2>/dev/null || true)"
+
+    if [[ -z "${uncommitted}" ]]; then
+        success "Git working tree is clean (${branch})"
+    else
+        issues=$((issues + 1))
+        fail "Git working tree has uncommitted changes (${branch})"
+        git -C "${dotfilesDirectory}" status --short 2>/dev/null | sed 's/^/    /' || true
+    fi
+
+    local upstream
+    upstream="$(git -C "${dotfilesDirectory}" rev-parse --abbrev-ref '@{upstream}' 2>/dev/null || true)"
+
+    if [[ -n "${upstream}" ]]; then
+        local behind ahead
+        behind="$(git -C "${dotfilesDirectory}" rev-list --count "@{upstream}" ^HEAD 2>/dev/null || echo 0)"
+        ahead="$(git -C "${dotfilesDirectory}" rev-list --count HEAD ^"@{upstream}" 2>/dev/null || echo 0)"
+
+        if [[ "${behind}" -gt 0 ]]; then
+            issues=$((issues + 1))
+            fail "Branch is behind ${upstream} by ${behind} commit(s) (run \`dotfiles sync\` or \`git pull\`)"
+        fi
+
+        if [[ "${ahead}" -gt 0 ]]; then
+            info "Branch is ahead of ${upstream} by ${ahead} commit(s) (unpushed)"
+        fi
+
+        if [[ "${behind}" -eq 0 && "${ahead}" -eq 0 ]]; then
+            success "Branch is up to date with ${upstream}"
+        fi
+    else
+        info "No upstream tracking branch configured for ${branch}"
+    fi
+
+    local stashCount
+    stashCount="$(git -C "${dotfilesDirectory}" rev-list --walk-reflogs --count refs/stash 2>/dev/null || echo 0)"
+    if [[ "${stashCount}" -gt 0 ]]; then
+        info "Git has ${stashCount} stash(es)"
+    fi
+
+    # --------------------------------------------------------------------------
+    # Installed packages
+    # --------------------------------------------------------------------------
+
+    echo ""
+    echo "${bold}Installed Packages${normal}"
+
+    local brewfile="${dotfilesDirectory}/system/Brewfile"
+
+    if ! command -v brew > /dev/null 2>&1; then
+        issues=$((issues + 1))
+        fail "Homebrew is not installed"
+    elif [[ ! -f "${brewfile}" ]]; then
+        issues=$((issues + 1))
+        fail "Brewfile not found at ${brewfile}"
+    else
+        local brewCheckOutput
+        if brewCheckOutput="$(brew bundle check --file="${brewfile}" 2>&1)"; then
+            local cleanupOutput
+            cleanupOutput="$(brew bundle cleanup --file="${brewfile}" < /dev/null 2>&1 || true)"
+            if [[ -z "${cleanupOutput}" ]]; then
+                success "Installed packages match the Brewfile"
+            else
+                issues=$((issues + 1))
+                fail "Extra packages are installed that are not in the Brewfile (run \`dotfiles sync\` to clean up)"
+                echo "${cleanupOutput}" | sed 's/^/    /'
+            fi
+        else
+            issues=$((issues + 1))
+            fail "Brewfile dependencies are not satisfied (run \`dotfiles sync\` to sync packages)"
+            if [[ -n "${brewCheckOutput}" ]]; then
+                echo "${brewCheckOutput}" | sed 's/^/    /'
+            fi
+        fi
+    fi
+
+    # --------------------------------------------------------------------------
+    # Symlinks
+    # --------------------------------------------------------------------------
+
+    echo ""
+    echo "${bold}Symlinks${normal}"
+
+    local symlinksChecked=0
+    local symlinksOk=0
+    local symlinksFailed=0
+
+    checkSingleSymlink() {
+        local src="${1}"
+        local dst="${2}"
+        symlinksChecked=$((symlinksChecked + 1))
+
+        if [[ -L "${dst}" ]]; then
+            local currentTarget
+            currentTarget="$(readlink "${dst}" 2>/dev/null || true)"
+            if [[ "${currentTarget}" == "${src}" ]] || [[ -e "${dst}" && "$(realpath "${dst}" 2>/dev/null || true)" == "$(realpath "${src}" 2>/dev/null || true)" ]]; then
+                symlinksOk=$((symlinksOk + 1))
+            else
+                symlinksFailed=$((symlinksFailed + 1))
+                fail "${dst} -> ${currentTarget} (expected ${src})"
+            fi
+        elif [[ -e "${dst}" ]]; then
+            symlinksFailed=$((symlinksFailed + 1))
+            fail "${dst} exists but is not a symlink (expected -> ${src})"
+        else
+            symlinksFailed=$((symlinksFailed + 1))
+            fail "${dst} is missing (expected -> ${src})"
+        fi
+    }
+
+    # 1. Check ~/.dotfiles symlink
+    checkSingleSymlink "${dotfilesDirectory}" "${HOME}/.dotfiles"
+
+    # 2. Check top-level *.symlink files
+    while IFS= read -r -u 3 -d ""; do
+        checkSingleSymlink "${REPLY}" "${HOME}/.$(basename "${REPLY%.*}")"
+    done 3< <(find -H "${dotfilesDirectory}" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -not -path '*.symlinkParent*' -print0 2>/dev/null)
+
+    # 3. Check *.symlinkParent directories and nested *.symlink files
+    checkSymlinksFromParent() {
+        local sourceDirectory="${1}"
+        local destinationDirectory="${2}"
+
+        while IFS= read -r -u 3 -d ""; do
+            checkSingleSymlink "${REPLY}" "${destinationDirectory}/$(basename "${REPLY%.*}")"
+        done 3< <(find -H "${sourceDirectory}" -maxdepth 1 -name '*.symlink' -not -path '*.git*' -print0 2>/dev/null)
+
+        while IFS= read -r -u 3 -d ""; do
+            checkSymlinksFromParent "${REPLY}" "${destinationDirectory}/$(basename "${REPLY%.*}")"
+        done 3< <(find -H "${sourceDirectory}" -maxdepth 1 -name '*.symlinkParent' -not -path '*.git*' -not -path "${sourceDirectory}" -print0 2>/dev/null)
+    }
+
+    while IFS= read -r -u 3 -d ""; do
+        checkSymlinksFromParent "${REPLY}" "${HOME}/.$(basename "${REPLY%.*}")"
+    done 3< <(find -H "${dotfilesDirectory}" -maxdepth 2 -name '*.symlinkParent' -not -path '*.git*' -print0 2>/dev/null)
+
+    # 4. Check LaunchAgents on macOS
+    if [[ "$(uname -s)" == "Darwin" && -d "${dotfilesDirectory}/macos/LaunchAgents" ]]; then
+        while IFS= read -r -u 3 -d ""; do
+            checkSingleSymlink "${REPLY}" "${HOME}/Library/LaunchAgents/$(basename "${REPLY}")"
+        done 3< <(find -H "${dotfilesDirectory}/macos/LaunchAgents" -maxdepth 1 -name '*.plist' -print0 2>/dev/null)
+    fi
+
+    # 5. Check for broken symlinks in $HOME pointing into dotfiles
+    while IFS= read -r -u 3 -d ""; do
+        local target
+        target="$(readlink "${REPLY}" 2>/dev/null || true)"
+        if [[ "${target}" == "${dotfilesDirectory}"* && ! -e "${REPLY}" ]]; then
+            symlinksFailed=$((symlinksFailed + 1))
+            fail "Broken symlink: ${REPLY} points to missing ${target}"
+        fi
+    done 3< <(find "${HOME}" -maxdepth 2 -type l ! -exec test -e {} \; -print0 2>/dev/null)
+
+    if [[ "${symlinksFailed}" -eq 0 ]]; then
+        success "All symlinks are correctly linked (${symlinksOk} checked)"
+    else
+        issues=$((issues + symlinksFailed))
+        fail "${symlinksFailed} of ${symlinksChecked} symlinks are missing or incorrect (run \`dotfiles --link\` to fix)"
+    fi
+
+    # --------------------------------------------------------------------------
+    # Key dotfiles status
+    # --------------------------------------------------------------------------
+
+    echo ""
+    echo "${bold}Key Status${normal}"
+
+    # Default shell
+    local currentShell
+    currentShell="$(basename "${SHELL:-}")"
+    if [[ "${currentShell}" == "zsh" ]]; then
+        success "Default shell is zsh"
+    else
+        issues=$((issues + 1))
+        fail "Default shell is ${currentShell:-unknown} (expected zsh)"
+    fi
+
+    # --------------------------------------------------------------------------
+    # Summary
+    # --------------------------------------------------------------------------
+
+    echo ""
+    if [[ "${issues}" -eq 0 ]]; then
+        success "All dotfiles checks passed!"
+        exit 0
+    else
+        fail "${issues} issue(s) found with dotfiles"
+        exit 1
+    fi
+}
+
+if [[ "${1}" == "check" ]]; then
+    if [[ "${2}" == "-h" || "${2}" == "--help" ]]; then
+        displayCheckUsageAndExit
+    fi
+
+    runCheck
+fi
+
+# ------------------------------------------------------------------------------
 # Default (no) subcommand
 # ------------------------------------------------------------------------------
 
 if test $# -eq 0; then
-	runSync
+	runCheck
 fi
 
 defaults="false"
