@@ -17,7 +17,7 @@ displayUsageAndExit() {
 	echo ""
 	echo "Usage: dotfiles [subcommand] [arguments and options]."
 	echo ""
-	echo "Subcommands: add, (none)"
+	echo "Subcommands: add, git, sync, (none)"
 	echo ""
 	echo "${bold}Add subcommand:${normal} Adds a symlink for a file or directory to the dotfiles directory"
 	echo ""
@@ -29,6 +29,10 @@ displayUsageAndExit() {
 	echo "${bold}Git subcommand:${normal} Runs git in the dotfiles directory without changing current working directory"
 	echo ""
 	echo "Usage: dotfiles git [git arguments and options]"
+	echo ""
+	echo "${bold}Sync subcommand:${normal} Installs and uninstalls Homebrew packages so that they exactly match the Brewfile"
+	echo ""
+	echo "Usage: dotfiles sync"
 	echo ""
 	echo "${bold}Default with no subcommand specified:${normal} Updates system to match dotfiles directory"
 	echo ""
@@ -139,6 +143,29 @@ fi
 if [[ "${1}" == "git" ]]; then
     shift
     git -C "${dotfilesDirectory}" "${@}"
+    exit
+fi
+
+# ------------------------------------------------------------------------------
+# Sync subcommand
+# ------------------------------------------------------------------------------
+
+if [[ "${1}" == "sync" ]]; then
+    brewfile="${dotfilesDirectory}/system/Brewfile"
+
+    echo "Updating dotfiles..."
+    git -C "${dotfilesDirectory}" pull --ff-only --autostash
+
+    echo ""
+    echo "› brew bundle install"
+    brew bundle install --file="${brewfile}"
+
+    echo ""
+    echo "› brew bundle cleanup"
+    brew bundle cleanup --force --zap --file="${brewfile}"
+
+    echo ""
+    success "Installed packages match the Brewfile"
     exit
 fi
 

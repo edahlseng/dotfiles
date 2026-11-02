@@ -1,0 +1,255 @@
+#!/bin/bash
+#
+# This script shadows brew in order to keep the dotfiles Brewfile in sync with
+# packages that are installed or uninstalled from the command line.
+#
+# After a successful `brew install` or `brew uninstall`, the dotfiles repository
+# is pulled, the Brewfile is updated with `brew bundle add`/`brew bundle remove`,
+# and the change is committed and pushed. All other commands are passed through.
+
+parentDirectory="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
+dotfilesDirectory="$(cd "$( dirname "${parentDirectory}" )" && pwd -P)"
+brewfileRelativePath="system/Brewfile"
+brewfile="${dotfilesDirectory}/${brewfileRelativePath}"
+
+source "${dotfilesDirectory}/system/logging.sh"
+
+# Find the real brew further along the PATH, skipping this script
+brew=""
+while IFS= read -r candidate; do
+	if [[ "$(cd "$( dirname "${candidate}" )" && pwd -P)" != "${parentDirectory}" ]]; then
+		brew="${candidate}"
+		break
+	fi
+done < <(type -ap brew)
+
+if [[ -z "${brew}" ]]; then
+	fail "Could not find Homebrew on the PATH"
+	exit 127
+fi
+
+case "${1}" in
+	"install")
+		action="add"
+		;;
+	"uninstall"|"remove"|"rm")
+		action="remove"
+		;;
+	*)
+		exec "${brew}" "${@}"
+		;;
+esac
+
+# ------------------------------------------------------------------------------
+# Parse the package names and type out of the arguments
+# ------------------------------------------------------------------------------
+
+requestedType=""
+packages=()
+for argument in "${@:2}"; do
+	case "${argument}" in
+		"--cask"|"--casks")
+			requestedType="cask"
+			;;
+		"--formula"|"--formulae")
+			requestedType="brew"
+			;;
+		-*)
+			;;
+		*.rb|*://*)
+			# Local formula files and URLs can't be tracked in the Brewfile
+			;;
+		*)
+			packages+=("${argument}")
+			;;
+	esac
+done
+
+packageType() {
+	if [[ -n "${requestedType}" ]]; then
+		echo "${requestedType}"
+	elif "${brew}" list --formula --versions "${1}" > /dev/null 2>&1; then
+		echo "brew"
+	elif "${brew}" list --cask --versions "${1}" > /dev/null 2>&1; then
+		echo "cask"
+	fi
+}
+
+# Uninstalled packages can't be inspected afterwards, so determine their types up front
+packageTypes=()
+if [[ "${action}" == "remove" ]]; then
+	for package in "${packages[@]}"; do
+		packageTypes+=("$(packageType "${package}")")
+	done
+fi
+
+# ------------------------------------------------------------------------------
+# Run the brew command exactly as written
+# ------------------------------------------------------------------------------
+
+"${brew}" "${@}" || exit
+
+if [[ ${#packages[@]} -eq 0 ]]; then
+	exit
+fi
+
+if [[ "${action}" == "add" ]]; then
+	for package in "${packages[@]}"; do
+		packageTypes+=("$(packageType "${package}")")
+	done
+fi
+
+# ------------------------------------------------------------------------------
+# Update the Brewfile
+# ------------------------------------------------------------------------------
+
+echo ""
+echo "Updating Brewfile..."
+
+if ! git -C "${dotfilesDirectory}" diff --quiet HEAD -- "${brewfileRelativePath}"; then
+	fail "${brewfileRelativePath} has uncommitted changes; not updating it automatically"
+	exit 1
+fi
+
+if ! git -C "${dotfilesDirectory}" pull --ff-only --autostash --quiet; then
+	fail "Could not pull the dotfiles repository; not updating ${brewfileRelativePath}"
+	exit 1
+fi
+
+# Checks whether the Brewfile has an entry of the given type and name
+brewfileHasEntry() {
+	awk -v type="${1}" -v name="\"${2}\"" '
+		$1 == type && ($2 == name || $2 == name ",") { found = 1 }
+		END { exit !found }
+	' "${brewfile}"
+}
+
+# `brew bundle add` appends to the end of the file, so move the last line next to the
+# entries of the same type, in sorted order. Fully qualified names (e.g. "user/tap/name")
+# are kept sorted separately after the other entries, matching the existing layout.
+moveLastEntryIntoPlace() {
+	local sortedBrewfile
+	sortedBrewfile="$(awk '
+		function entryName(line) {
+			sub(/^[^"]*"/, "", line)
+			sub(/".*$/, "", line)
+			return tolower(line)
+		}
+		{ lines[NR] = $0 }
+		END {
+			entry = lines[NR]
+			split(entry, fields, " ")
+			type = fields[1]
+			name = entryName(entry)
+			qualified = (name ~ /\//)
+			insertBefore = 0
+			lastOfGroup = 0
+			lastOfType = 0
+			for (i = 1; i < NR; i++) {
+				split(lines[i], fields, " ")
+				if (fields[1] != type) continue
+				lastOfType = i
+				otherName = entryName(lines[i])
+				if ((otherName ~ /\//) != qualified) continue
+				lastOfGroup = i
+				if (!insertBefore && otherName > name) insertBefore = i
+			}
+			if (!insertBefore && lastOfGroup) insertBefore = lastOfGroup + 1
+			if (!insertBefore && lastOfType) insertBefore = lastOfType + 1
+			if (!insertBefore) {
+				# No entries of this type yet, so leave it at the end of the file
+				for (i = 1; i <= NR; i++) print lines[i]
+				exit
+			}
+			for (i = 1; i < NR; i++) {
+				if (i == insertBefore) print entry
+				print lines[i]
+			}
+			if (insertBefore == NR) print entry
+		}
+	' "${brewfile}")" || return
+	printf '%s\n' "${sortedBrewfile}" > "${brewfile}"
+}
+
+addToBrewfile() {
+	local type="${1}" package="${2}" tap
+
+	# Fully qualified names need their tap listed too, otherwise `brew bundle cleanup` untaps it
+	if [[ "${package}" == */*/* ]]; then
+		tap="${package%/*}"
+		if ! brewfileHasEntry tap "${tap}"; then
+			"${brew}" bundle add --tap --file="${brewfile}" "${tap}" && moveLastEntryIntoPlace
+		fi
+	fi
+
+	if ! brewfileHasEntry "${type}" "${package}"; then
+		local typeOption="--formula"
+		[[ "${type}" == "cask" ]] && typeOption="--cask"
+		"${brew}" bundle add "${typeOption}" --no-describe --file="${brewfile}" "${package}" && moveLastEntryIntoPlace
+	fi
+}
+
+removeFromBrewfile() {
+	local type="${1}" package="${2}"
+	local typeOption=()
+	[[ "${type}" == "brew" ]] && typeOption=("--formula")
+	[[ "${type}" == "cask" ]] && typeOption=("--cask")
+	"${brew}" bundle remove "${typeOption[@]}" --file="${brewfile}" "${package}"
+}
+
+for index in "${!packages[@]}"; do
+	package="${packages[index]}"
+	type="${packageTypes[index]}"
+
+	if [[ "${action}" == "add" ]]; then
+		if [[ -z "${type}" ]]; then
+			fail "Could not determine whether ${package} is a formula or a cask; not adding it to the Brewfile"
+			continue
+		fi
+		addToBrewfile "${type}" "${package}"
+	else
+		removeFromBrewfile "${type}" "${package}"
+	fi
+done
+
+# ------------------------------------------------------------------------------
+# Commit and push the change
+# ------------------------------------------------------------------------------
+
+if git -C "${dotfilesDirectory}" diff --quiet -- "${brewfileRelativePath}"; then
+	info "${brewfileRelativePath} already up to date"
+else
+	verb="Add"
+	[[ "${action}" == "remove" ]] && verb="Remove"
+	packageList="$(printf ', %s' "${packages[@]}")"
+	commitMessage="${verb} ${packageList:2}"
+
+	if git -C "${dotfilesDirectory}" commit --quiet --message "${commitMessage}" -- "${brewfileRelativePath}"; then
+		success "Committed \"${commitMessage}\""
+		if git -C "${dotfilesDirectory}" push --quiet; then
+			success "Pushed dotfiles"
+		else
+			fail "Could not push dotfiles; run \`dotfiles git push\` to retry"
+		fi
+	else
+		fail "Could not commit ${brewfileRelativePath}"
+	fi
+fi
+
+# ------------------------------------------------------------------------------
+# Check whether the installed packages match the Brewfile
+# ------------------------------------------------------------------------------
+
+# Output is captured so that `brew bundle cleanup` reports instead of prompting
+brewfileIsSatisfied() {
+	"${brew}" bundle check --file="${brewfile}" > /dev/null 2>&1
+}
+
+nothingExtraIsInstalled() {
+	"${brew}" bundle cleanup --file="${brewfile}" < /dev/null > /dev/null 2>&1
+}
+
+if ! brewfileIsSatisfied || ! nothingExtraIsInstalled; then
+	echo ""
+	info "Installed packages don't match the Brewfile. Run \`dotfiles sync\` to sync them."
+fi
