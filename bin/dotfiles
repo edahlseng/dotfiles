@@ -15,46 +15,88 @@ normal=$(tput sgr0)
 displayUsageAndExit() {
 	echo "${bold}dotfiles -- dotfiles management${normal}"
 	echo ""
-	echo "Usage: dotfiles [subcommand] [arguments and options]."
+	echo "${bold}Usage:${normal} dotfiles [subcommand] [arguments and options]."
 	echo ""
-	echo "Subcommands: add, git, sync, (none)"
+	echo "${bold}Subcommands:${normal}"
+	echo "  add     Adds a symlink for a file or directory to the dotfiles directory"
+	echo "  edit    Opens dotfiles directory for editing"
+	echo "  git     Runs git in the dotfiles directory without changing current working directory"
+	echo "  sync    Installs and uninstalls Homebrew packages so that they exactly match the Brewfile"
 	echo ""
+	echo "If no options are specified, the command will default to sync."
+	echo ""
+	echo "${bold}Global Options:${normal}"
+	echo "  -c, --command-line-sudo-askpass  Use command line prompt to ask for sudo password"
+	echo "  -d, --defaults                   Set defaults"
+	echo "  -h, --help                       Show this help message and exit"
+	echo "  -i, --install                    Install dependencies"
+	echo "  -l, --link                       Link dotfiles into the proper place"
+	exit
+}
+
+displayAddUsageAndExit() {
 	echo "${bold}Add subcommand:${normal} Adds a symlink for a file or directory to the dotfiles directory"
 	echo ""
 	echo "Usage: dotfiles add <path> [options]"
 	echo ""
 	echo "Arguments:"
 	echo "  path: The path to add to the dotfiles directory"
+	exit
+}
+
+displayEditUsageAndExit() {
+	echo "${bold}Edit subcommand:${normal} Opens dotfiles directory for editing"
 	echo ""
+	echo "Usage: dotfiles edit"
+	exit
+}
+
+displayGitUsageAndExit() {
 	echo "${bold}Git subcommand:${normal} Runs git in the dotfiles directory without changing current working directory"
 	echo ""
 	echo "Usage: dotfiles git [git arguments and options]"
-	echo ""
+	exit
+}
+
+displaySyncUsageAndExit() {
 	echo "${bold}Sync subcommand:${normal} Installs and uninstalls Homebrew packages so that they exactly match the Brewfile"
 	echo ""
 	echo "Usage: dotfiles sync"
-	echo ""
-	echo "${bold}Default with no subcommand specified:${normal} Updates system to match dotfiles directory"
-	echo ""
-	echo "Usage: dotfiles [options]."
-	echo ""
-	echo "If no options are specified, the command will ensure that the local machine is in sync with the dotfiles repository (effectively running with options -d -i -l)."
-	echo ""
-	echo "Options:"
-	echo "  -c, --command-line-sudo-askpass  Use command line prompt to ask for sudo password"
-	echo "  -d, --defaults                   Set defaults"
-	echo "  -e, --edit              Open dotfiles directory for editing"
-	echo "  -h, --help              Show this help message and exit"
-	echo "  -i, --install           Install dependencies"
-	echo "  -l, --link              Link dotfiles into the proper place"
 	exit
 }
+
+# ------------------------------------------------------------------------------
+# Help subcommand
+# ------------------------------------------------------------------------------
+
+if [[ "${1}" == "help" ]]; then
+    case "${2}" in
+        "add")
+            displayAddUsageAndExit
+            ;;
+        "edit")
+            displayEditUsageAndExit
+            ;;
+        "git")
+            displayGitUsageAndExit
+            ;;
+        "sync")
+            displaySyncUsageAndExit
+            ;;
+        *)
+            displayUsageAndExit
+            ;;
+    esac
+fi
 
 # ------------------------------------------------------------------------------
 # Add subcommand
 # ------------------------------------------------------------------------------
 
 if [[ "${1}" == "add" ]]; then
+    if [[ "${2}" == "-h" || "${2}" == "--help" ]]; then
+        displayAddUsageAndExit
+    fi
     if [[ ! -e "${2}" ]]; then
         echo "Error: Could not find path: ${2}"
         exit 1
@@ -137,10 +179,27 @@ if [[ "${1}" == "add" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
+# Edit subcommand
+# ------------------------------------------------------------------------------
+
+if [[ "${1}" == "edit" ]]; then
+    if [[ "${2}" == "-h" || "${2}" == "--help" ]]; then
+        displayEditUsageAndExit
+    fi
+
+    "${dotfilesDirectory}/bin/edit" "${dotfilesDirectory}"
+    exit
+fi
+
+# ------------------------------------------------------------------------------
 # Git subcommand
 # ------------------------------------------------------------------------------
 
 if [[ "${1}" == "git" ]]; then
+    if [[ "${2}" == "-h" || "${2}" == "--help" ]]; then
+        displayGitUsageAndExit
+    fi
+
     shift
     git -C "${dotfilesDirectory}" "${@}"
     exit
@@ -150,7 +209,7 @@ fi
 # Sync subcommand
 # ------------------------------------------------------------------------------
 
-if [[ "${1}" == "sync" ]]; then
+runSync() {
     brewfile="${dotfilesDirectory}/system/Brewfile"
 
     echo "Updating dotfiles..."
@@ -167,6 +226,14 @@ if [[ "${1}" == "sync" ]]; then
     echo ""
     success "Installed packages match the Brewfile"
     exit
+}
+
+if [[ "${1}" == "sync" ]]; then
+    if [[ "${2}" == "-h" || "${2}" == "--help" ]]; then
+        displaySyncUsageAndExit
+    fi
+
+    runSync
 fi
 
 # ------------------------------------------------------------------------------
@@ -174,15 +241,12 @@ fi
 # ------------------------------------------------------------------------------
 
 if test $# -eq 0; then
-	# If no options are specified, run as if -d -i -l was called
-	defaults="true"
-	link="true"
-	install="true"
-else
-	defaults="false"
-	link="false"
-	install="false"
+	runSync
 fi
+
+defaults="false"
+link="false"
+install="false"
 guiSudoAskpass="true"
 
 while test $# -gt 0; do
@@ -192,10 +256,6 @@ while test $# -gt 0; do
 			;;
 		"-d"|"--defaults")
 			defaults="true"
-			;;
-		"-e"|"--edit")
-			exec "${EDITOR}" "${dotfilesDirectory}"
-			exit
 			;;
 		"-h"|"--help")
 			displayUsageAndExit
