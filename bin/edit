@@ -13,8 +13,8 @@
 #   $ e .
 #   $ e /usr/local
 #   # => opens the specified directory in your editor
-if [ "$1" == "-a" ]; then
-	exec "$EDITOR" $(ls)
+if [ "$1" = "-a" ]; then
+	exec "${EDITOR}" ${EDITOR_DEFAULT_OPEN_ARGUMENTS} $(ls)
 else
-	exec "$EDITOR" "${1:-.}"
+	exec "${EDITOR}" ${EDITOR_DEFAULT_OPEN_ARGUMENTS} "${1:-.}"
 fi
