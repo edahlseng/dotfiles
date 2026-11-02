@@ -1,9 +1,9 @@
 cask_args appdir: '/Applications'
 
-tap "borkdude/brew"
-tap "edahlseng/core"
-tap "golangci/tap"
-tap "mongodb/brew"
+tap "borkdude/brew", trusted: true
+tap "edahlseng/core", trusted: true
+tap "golangci/tap", trusted: true
+tap "mongodb/brew", trusted: true
 
 brew "awscli"
 brew "black"
