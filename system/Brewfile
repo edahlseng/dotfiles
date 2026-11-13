@@ -1,6 +1,7 @@
 cask_args appdir: '/Applications'
 
 tap "borkdude/brew", trusted: true
+tap "daytonaio/cli"
 tap "edahlseng/core", trusted: true
 tap "golangci/tap", trusted: true
 tap "mongodb/brew", trusted: true
@@ -73,6 +74,7 @@ brew "zsh-autosuggestions"
 brew "zsh-history-substring-search"
 brew "zsh-syntax-highlighting"
 brew "borkdude/brew/clj-kondo"
+brew "daytonaio/cli/daytona"
 brew "edahlseng/core/clang-tidy"
 brew "edahlseng/core/git-sweep"
 brew "golangci/tap/golangci-lint"
