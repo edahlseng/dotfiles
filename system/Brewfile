@@ -1,7 +1,7 @@
 cask_args appdir: '/Applications'
 
 tap "borkdude/brew", trusted: true
-tap "daytonaio/cli"
+tap "daytonaio/cli", trusted: true
 tap "edahlseng/core", trusted: true
 tap "golangci/tap", trusted: true
 tap "mongodb/brew", trusted: true
